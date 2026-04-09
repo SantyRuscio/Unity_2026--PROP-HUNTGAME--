@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 7904250680052018923}
   - component: {fileID: 1581474894326168377}
   m_Layer: 0
-  m_Name: Player
+  m_Name: PropPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3690356684
+  SortKey: 3250710200
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
