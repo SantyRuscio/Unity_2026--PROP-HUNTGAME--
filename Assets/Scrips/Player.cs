@@ -1,6 +1,8 @@
 using UnityEngine;
 using Fusion;
 using UnityEngine.InputSystem;
+using Fusion.Addons.Physics;
+using Unity.Mathematics;
 
 public class Player : NetworkBehaviour
 {
@@ -8,6 +10,8 @@ public class Player : NetworkBehaviour
     [SerializeField] InputActionReference _moveInputReference;
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce;
+
+    [SerializeField] NetworkRigidbody3D _netRb;
 
     private bool _jumpPressed;
 
@@ -20,6 +24,7 @@ public class Player : NetworkBehaviour
         if (Object.HasStateAuthority)
         {
             GetComponentInChildren<Renderer>().material.color = Color.blue;
+            _netRb = GetComponent<NetworkRigidbody3D>();
         }
         else
         {
@@ -34,7 +39,7 @@ public class Player : NetworkBehaviour
     {
         Debug.Log($"Render{Object.HasStateAuthority}");
 
-        if(Keyboard.current.wKey.wasPressedThisFrame )
+        if(Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             _jumpPressed = true;    
         }
@@ -65,12 +70,20 @@ public class Player : NetworkBehaviour
         }
 
         //Movernos de izq a der en base de moveInput
-        transform.position += Vector3.right * moveInpuT.x * (_speed * Time.deltaTime);
+        //transform.position += Vector3.right * moveInpuT.x * (_speed * Time.deltaTime);
+
+        _netRb.Rigidbody.linearVelocity += Vector3.right * (moveInpuT.x * 10 * _speed * Time.deltaTime);
+
+        if (Mathf.Abs (_netRb.Rigidbody.linearVelocity.x) <= _speed) return;
+
+        var newVelocity = _netRb.Rigidbody.linearVelocity;
+        newVelocity.x = moveInpuT.x * _speed;
+        _netRb.Rigidbody.linearVelocity = newVelocity;
     }
 
     void Jump()
     {
-
+        _netRb.Rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
     }
 
     //es como el OnDestroy pero se ejecuta cuando el objeto es eliminado de la red (runner.despawn)
