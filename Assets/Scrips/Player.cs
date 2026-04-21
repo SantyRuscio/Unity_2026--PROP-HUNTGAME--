@@ -1,22 +1,31 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Fusion;
 using UnityEngine.InputSystem;
 using Fusion.Addons.Physics;
 using Unity.Mathematics;
-
+using System;
 public class Player : NetworkBehaviour
 {
-
-    [SerializeField] InputActionReference _moveInputReference;
+    [Header("Movement")]
+    [SerializeField] private InputActionReference _moveInputReference;
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce;
 
-    [SerializeField] NetworkRigidbody3D _netRb;
+    [Header("Physics")]
+    [SerializeField] private NetworkRigidbody3D _netRb;
+
+    [Header("Ground Check")]
+    [SerializeField] private float _groundCheckDistance = 1.1f;
+    [SerializeField] private LayerMask _groundLayer;
 
     private bool _jumpPressed;
+    private bool _isGrounded;
+    public bool IsGrounded => _isGrounded;
 
-    //Es como el awake-start pero se ejecuta cuando el objeto es metido a la red (runner.spawn)
-    // Se ejecuta en todos los clientes
+    public event Action<float> OnMovement;
+    public event Action OnJump;
+    public event Action<bool> OnGroundedChanged;
+
     public override void Spawned()
     {
         Debug.Log($"Spawned {Object.HasStateAuthority}");
@@ -31,65 +40,84 @@ public class Player : NetworkBehaviour
             GetComponentInChildren<Renderer>().material.color = Color.red;
             enabled = false;
         }
+
+        Camera.main.GetComponent<CameraFollow>().SetTarget(transform);
     }
 
-    //Update
-    // Se ejecuta en todos los clientes
     public override void Render()
     {
-        Debug.Log($"Render{Object.HasStateAuthority}");
-
-        if(Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            _jumpPressed = true;    
+            _jumpPressed = true;
         }
     }
 
-    //es el update o una especie de fixUpdate que se ejecuta cada vez que la red se actualiza
-    // Se ejecuta solo en los que tienen autoridad de estado o iNPUT.
     public override void FixedUpdateNetwork()
     {
-        Debug.Log($"FixedUpdateNetwork {Object.HasStateAuthority}" );
-
+        CheckGround();
         Movement();
 
         if (_jumpPressed)
         {
+            if (_isGrounded)
+            {
+                Jump();
+            }
+
             _jumpPressed = false;
-            Jump(); 
         }
     }
 
+    void CheckGround()
+    {
+        Vector3 origin = transform.position + Vector3.up * 0.1f;
+
+        bool wasGrounded = _isGrounded;
+
+        _isGrounded = Physics.Raycast(
+            origin,
+            Vector3.down,
+            _groundCheckDistance,
+            _groundLayer
+        );
+
+        Debug.DrawRay(origin, Vector3.down * _groundCheckDistance, Color.red);
+
+        if (wasGrounded != _isGrounded)
+        {
+            OnGroundedChanged?.Invoke(_isGrounded);
+        }
+    }
+
+    // Movimiento
     void Movement()
     {
-        var moveInpuT = _moveInputReference.action.ReadValue<Vector2>();
+        var moveInput = _moveInputReference.action.ReadValue<Vector2>();
 
-        if(moveInpuT.x != 0)
+        var velocity = _netRb.Rigidbody.linearVelocity;
+
+        velocity.x = moveInput.x * _speed;
+        velocity.z = moveInput.y * _speed;
+
+        _netRb.Rigidbody.linearVelocity = velocity;
+
+        Vector3 dir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+
+        if (dir != Vector3.zero)
         {
-            transform.right = Vector3.right * Mathf.Sign(moveInpuT.x);
+            transform.forward = -dir; // corregido por tu modelo
         }
 
-        //Movernos de izq a der en base de moveInput
-        //transform.position += Vector3.right * moveInpuT.x * (_speed * Time.deltaTime);
-
-        _netRb.Rigidbody.linearVelocity += Vector3.right * (moveInpuT.x * 10 * _speed * Time.deltaTime);
-
-        if (Mathf.Abs (_netRb.Rigidbody.linearVelocity.x) <= _speed) return;
-
-        var newVelocity = _netRb.Rigidbody.linearVelocity;
-        newVelocity.x = moveInpuT.x * _speed;
-        _netRb.Rigidbody.linearVelocity = newVelocity;
+        OnMovement?.Invoke(moveInput.magnitude);
     }
 
     void Jump()
     {
         _netRb.Rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
+        OnJump?.Invoke();
     }
-
-    //es como el OnDestroy pero se ejecuta cuando el objeto es eliminado de la red (runner.despawn)
-    // Se ejecuta en todos los clientes
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
-        Debug.Log("Despawned" );
+        Debug.Log("Despawned");
     }
 }
