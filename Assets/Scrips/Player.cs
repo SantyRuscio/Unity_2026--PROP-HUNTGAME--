@@ -34,14 +34,14 @@ public class Player : NetworkBehaviour
         {
             GetComponentInChildren<Renderer>().material.color = Color.blue;
             _netRb = GetComponent<NetworkRigidbody3D>();
+
+            Camera.main.GetComponent<CameraFollow>().SetTarget(transform);
         }
         else
         {
             GetComponentInChildren<Renderer>().material.color = Color.red;
             enabled = false;
         }
-
-        Camera.main.GetComponent<CameraFollow>().SetTarget(transform);
     }
 
     public override void Render()
