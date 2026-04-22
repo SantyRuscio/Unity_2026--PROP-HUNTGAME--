@@ -103,6 +103,17 @@ public class Player : NetworkBehaviour
             TryShoot();
             _shootPressed = false;
         }
+
+        if (MatchTimer.IsRunning && MatchTimer.Expired(Runner))
+        {
+            RPC_NotifyGameEnd("¡VICTORIA DEL PROP! Sobrevivió el tiempo límite.");
+
+            if (Object.HasStateAuthority)
+            {
+                MatchTimer = TickTimer.None;
+            }
+        }
+
     }
 
     void CheckGround()
