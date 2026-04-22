@@ -4,8 +4,10 @@ using UnityEngine.InputSystem;
 using Fusion.Addons.Physics;
 using Unity.Mathematics;
 using System;
+
 public class Player : NetworkBehaviour
 {
+
     [Header("Movement")]
     [SerializeField] private InputActionReference _moveInputReference;
     [SerializeField] private float _speed;
@@ -18,6 +20,18 @@ public class Player : NetworkBehaviour
     [SerializeField] private float _groundCheckDistance = 1.1f;
     [SerializeField] private LayerMask _groundLayer;
 
+    [Header("Roles del Parcial")]
+    public bool isHunter;
+    private bool _shootPressed;
+
+    [Header("Prop Hunt Mechanic")]
+    [Networked] public int CurrentPropID { get; set; }
+    private bool _transformPressed;
+
+    [Header("Match Timer")]
+    [Networked] public TickTimer MatchTimer { get; set; }
+    [SerializeField] private float _matchTime = 60f; 
+
     private bool _jumpPressed;
     private bool _isGrounded;
     public bool IsGrounded => _isGrounded;
@@ -25,6 +39,8 @@ public class Player : NetworkBehaviour
     public event Action<float> OnMovement;
     public event Action OnJump;
     public event Action<bool> OnGroundedChanged;
+
+    public event Action OnTaunt;
 
     public override void Spawned()
     {
@@ -37,34 +53,55 @@ public class Player : NetworkBehaviour
 
             Camera.main.GetComponent<CameraFollow>().SetTarget(transform);
         }
+        if (Object.HasStateAuthority && isHunter)
+        {
+            MatchTimer = TickTimer.CreateFromSeconds(Runner, _matchTime);
+        }
         else
         {
             GetComponentInChildren<Renderer>().material.color = Color.red;
-            enabled = false;
         }
     }
 
     public override void Render()
     {
+        if (!Object.HasStateAuthority) return;
+
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             _jumpPressed = true;
         }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            if (isHunter) _shootPressed = true;
+            else _transformPressed = true;
+        }
+
+        if (Keyboard.current.tKey.wasPressedThisFrame)
+        {
+            RPC_PlayTaunt();
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayTaunt()
+    {
+        OnTaunt?.Invoke();
     }
 
     public override void FixedUpdateNetwork()
     {
-        CheckGround();
-        Movement();
-
-        if (_jumpPressed)
+        if (_transformPressed)
         {
-            if (_isGrounded)
-            {
-                Jump();
-            }
+            TryTransform();
+            _transformPressed = false;
+        }
 
-            _jumpPressed = false;
+        if (isHunter && _shootPressed)
+        {
+            TryShoot();
+            _shootPressed = false;
         }
     }
 
@@ -105,7 +142,7 @@ public class Player : NetworkBehaviour
 
         if (dir != Vector3.zero)
         {
-            transform.forward = -dir; // corregido por tu modelo
+            transform.forward = -dir;
         }
 
         OnMovement?.Invoke(moveInput.magnitude);
@@ -116,8 +153,45 @@ public class Player : NetworkBehaviour
         _netRb.Rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
         OnJump?.Invoke();
     }
+
     public override void Despawned(NetworkRunner runner, bool hasState)
     {
         Debug.Log("Despawned");
+    }
+
+    void TryTransform()
+    {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+        {
+            PropData propData = hit.collider.GetComponent<PropData>();
+
+            if (propData != null)
+            {
+                CurrentPropID = propData.PropID;
+            }
+        }
+    }
+
+    void TryShoot()
+    {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 15f))
+        {
+            Player hitPlayer = hit.collider.GetComponentInParent<Player>();
+
+            if (hitPlayer != null && !hitPlayer.isHunter)
+            {
+                RPC_NotifyGameEnd("¡VICTORIA DEL HUNTER! El Prop fue descubierto.");
+            }
+        }
+    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_NotifyGameEnd(string message)
+    {
+        Debug.LogWarning(message);
+        // acá se puede poner un cartel para avisar en la ui que ganó el hunter
     }
 }

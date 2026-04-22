@@ -13,7 +13,7 @@ using System.Collections.Generic;
 //
 //    public void PlayerJoined(PlayerRef player)
 //    {
-//        Debug.Log("Jugador entró");
+//        Debug.Log("Jugador entrï¿½");
 //
 //        if (!Runner.IsServer) return;
 //
@@ -32,28 +32,28 @@ using System.Collections.Generic;
 //    }
 //}
 
-public class PlayerSpawner : SimulationBehaviour, IPlayerJoined
-{
-    Vector3 Pos = new Vector3(1, 1.5f, 1);
+//public class PlayerSpawner : SimulationBehaviour, IPlayerJoined
+//{
+//    Vector3 Pos = new Vector3(1, 1.5f, 1);
 
-    [SerializeField] private Transform[] _spawnPoints;
+//    [SerializeField] private Transform[] _spawnPoints;
 
-    [SerializeField] private NetworkPrefabRef _playerprefab;
-    public void PlayerJoined(PlayerRef player)
-    {
-        var playersCount = Runner.SessionInfo.PlayerCount;
+//    [SerializeField] private NetworkPrefabRef _playerprefab;
+//    public void PlayerJoined(PlayerRef player)
+//    {
+//        var playersCount = Runner.SessionInfo.PlayerCount;
 
-        if (playersCount > 2) { return; }
+//        if (playersCount > 2) { return; }
 
-        //si el cliente que entro es el mismo cliente en donde corre est codigo:
-        if (player == Runner.LocalPlayer)
-        {
-            var slot = playersCount - 1;
+//        //si el cliente que entro es el mismo cliente en donde corre est codigo:
+//        if (player == Runner.LocalPlayer)
+//        {
+//            var slot = playersCount - 1;
 
-            var spawnPoint = _spawnPoints[slot];
+//            var spawnPoint = _spawnPoints[slot];
 
-            Runner.Spawn(_playerprefab, spawnPoint.position, spawnPoint.rotation);
+//            Runner.Spawn(_playerprefab, spawnPoint.position, spawnPoint.rotation);
             
-        }
-    }
-}
+//        }
+//    }
+//}
