@@ -9,12 +9,19 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner _runner;
 
-    [Header("Prefabs Asimétricos")]
+    [Header("Prefabs Asimï¿½tricos")]
     [SerializeField]
     private NetworkPrefabRef prefabPlayer1;
 
     [SerializeField]
     private NetworkPrefabRef prefabPlayer2;
+
+    void Awake()
+    {
+        QualitySettings.vSyncCount = 0;
+
+        Application.targetFrameRate = 60;
+    }
 
     async void Start()
     {

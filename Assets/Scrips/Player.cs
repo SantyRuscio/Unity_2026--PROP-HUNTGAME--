@@ -164,19 +164,29 @@ public class Player : NetworkBehaviour
     void TryTransform()
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+
+        Debug.DrawRay(ray.origin, ray.direction * 50f, Color.green, 2f);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 50f))
         {
             PropData propData = hit.collider.GetComponent<PropData>();
-            if (propData != null) CurrentPropID = propData.PropID;
+            if (propData != null)
+            {
+                CurrentPropID = propData.PropID;
+            }
         }
     }
 
     void TryShoot()
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        if (Physics.Raycast(ray, out RaycastHit hit, 15f))
+
+        Debug.DrawRay(ray.origin, ray.direction * 50f, Color.red, 2f);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 50f))
         {
             Player hitPlayer = hit.collider.GetComponentInParent<Player>();
+
             if (hitPlayer != null && !hitPlayer.isHunter)
             {
                 RPC_NotifyGameEnd("¡PROP ENCONTRADO! Victoria del Hunter.");
@@ -188,6 +198,5 @@ public class Player : NetworkBehaviour
     public void RPC_NotifyGameEnd(string message)
     {
         Debug.LogWarning(message);
-        // Aquí podrías activar un texto en tu Canvas de UI
     }
 }
