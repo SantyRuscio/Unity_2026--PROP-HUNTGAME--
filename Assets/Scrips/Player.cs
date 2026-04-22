@@ -2,16 +2,14 @@
 using Fusion;
 using UnityEngine.InputSystem;
 using Fusion.Addons.Physics;
-using Unity.Mathematics;
 using System;
 
 public class Player : NetworkBehaviour
 {
-
     [Header("Movement")]
     [SerializeField] private InputActionReference _moveInputReference;
-    [SerializeField] private float _speed;
-    [SerializeField] private float _jumpForce;
+    [SerializeField] private float _speed = 5f;
+    [SerializeField] private float _jumpForce = 7f;
 
     [Header("Physics")]
     [SerializeField] private NetworkRigidbody3D _netRb;
@@ -21,6 +19,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private LayerMask _groundLayer;
 
     [Header("Roles del Parcial")]
+    [Tooltip("Tildar solo en el prefab del Hunter")]
     public bool isHunter;
     private bool _shootPressed;
 
@@ -30,7 +29,7 @@ public class Player : NetworkBehaviour
 
     [Header("Match Timer")]
     [Networked] public TickTimer MatchTimer { get; set; }
-    [SerializeField] private float _matchTime = 60f; 
+    [SerializeField] private float _matchTime = 60f;
 
     private bool _jumpPressed;
     private bool _isGrounded;
@@ -39,27 +38,37 @@ public class Player : NetworkBehaviour
     public event Action<float> OnMovement;
     public event Action OnJump;
     public event Action<bool> OnGroundedChanged;
-
     public event Action OnTaunt;
 
     public override void Spawned()
     {
-        Debug.Log($"Spawned {Object.HasStateAuthority}");
-
         if (Object.HasStateAuthority)
         {
-            GetComponentInChildren<Renderer>().material.color = Color.blue;
-            _netRb = GetComponent<NetworkRigidbody3D>();
+            SetPlayerColor(Color.blue);
 
+            _netRb = GetComponent<NetworkRigidbody3D>();
             Camera.main.GetComponent<CameraFollow>().SetTarget(transform);
-        }
-        if (Object.HasStateAuthority && isHunter)
-        {
-            MatchTimer = TickTimer.CreateFromSeconds(Runner, _matchTime);
+
+            if (isHunter)
+            {
+                MatchTimer = TickTimer.CreateFromSeconds(Runner, _matchTime);
+            }
         }
         else
         {
-            GetComponentInChildren<Renderer>().material.color = Color.red;
+            SetPlayerColor(Color.red);
+        }
+    }
+
+    private void SetPlayerColor(Color teamColor)
+    {
+        Renderer[] allRenderers = GetComponentsInChildren<Renderer>(true);
+        foreach (Renderer ren in allRenderers)
+        {
+            foreach (Material mat in ren.materials)
+            {
+                mat.color = teamColor;
+            }
         }
     }
 
@@ -67,10 +76,7 @@ public class Player : NetworkBehaviour
     {
         if (!Object.HasStateAuthority) return;
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            _jumpPressed = true;
-        }
+        if (Keyboard.current.spaceKey.wasPressedThisFrame) _jumpPressed = true;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -92,6 +98,8 @@ public class Player : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        if (Runner.SessionInfo.PlayerCount < 2) return;
+
         if (_transformPressed)
         {
             TryTransform();
@@ -106,55 +114,43 @@ public class Player : NetworkBehaviour
 
         if (MatchTimer.IsRunning && MatchTimer.Expired(Runner))
         {
-            RPC_NotifyGameEnd("¡VICTORIA DEL PROP! Sobrevivió el tiempo límite.");
-
-            if (Object.HasStateAuthority)
-            {
-                MatchTimer = TickTimer.None;
-            }
+            RPC_NotifyGameEnd("¡TIEMPO AGOTADO! Victoria de los Props.");
+            if (Object.HasStateAuthority) MatchTimer = TickTimer.None;
         }
 
+        if (!Object.HasStateAuthority) return;
+
+        CheckGround();
+        Movement();
+
+        if (_jumpPressed)
+        {
+            if (_isGrounded) Jump();
+            _jumpPressed = false;
+        }
     }
 
     void CheckGround()
     {
         Vector3 origin = transform.position + Vector3.up * 0.1f;
-
         bool wasGrounded = _isGrounded;
 
-        _isGrounded = Physics.Raycast(
-            origin,
-            Vector3.down,
-            _groundCheckDistance,
-            _groundLayer
-        );
+        _isGrounded = Physics.Raycast(origin, Vector3.down, _groundCheckDistance, _groundLayer);
 
-        Debug.DrawRay(origin, Vector3.down * _groundCheckDistance, Color.red);
-
-        if (wasGrounded != _isGrounded)
-        {
-            OnGroundedChanged?.Invoke(_isGrounded);
-        }
+        if (wasGrounded != _isGrounded) OnGroundedChanged?.Invoke(_isGrounded);
     }
 
-    // Movimiento
     void Movement()
     {
         var moveInput = _moveInputReference.action.ReadValue<Vector2>();
-
         var velocity = _netRb.Rigidbody.linearVelocity;
 
         velocity.x = moveInput.x * _speed;
         velocity.z = moveInput.y * _speed;
-
         _netRb.Rigidbody.linearVelocity = velocity;
 
         Vector3 dir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-
-        if (dir != Vector3.zero)
-        {
-            transform.forward = -dir;
-        }
+        if (dir != Vector3.zero) transform.forward = -dir;
 
         OnMovement?.Invoke(moveInput.magnitude);
     }
@@ -165,44 +161,33 @@ public class Player : NetworkBehaviour
         OnJump?.Invoke();
     }
 
-    public override void Despawned(NetworkRunner runner, bool hasState)
-    {
-        Debug.Log("Despawned");
-    }
-
     void TryTransform()
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-
         if (Physics.Raycast(ray, out RaycastHit hit, 10f))
         {
             PropData propData = hit.collider.GetComponent<PropData>();
-
-            if (propData != null)
-            {
-                CurrentPropID = propData.PropID;
-            }
+            if (propData != null) CurrentPropID = propData.PropID;
         }
     }
 
     void TryShoot()
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-
         if (Physics.Raycast(ray, out RaycastHit hit, 15f))
         {
             Player hitPlayer = hit.collider.GetComponentInParent<Player>();
-
             if (hitPlayer != null && !hitPlayer.isHunter)
             {
-                RPC_NotifyGameEnd("¡VICTORIA DEL HUNTER! El Prop fue descubierto.");
+                RPC_NotifyGameEnd("¡PROP ENCONTRADO! Victoria del Hunter.");
             }
         }
     }
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_NotifyGameEnd(string message)
     {
         Debug.LogWarning(message);
-        // acá se puede poner un cartel para avisar en la ui que ganó el hunter
+        // Aquí podrías activar un texto en tu Canvas de UI
     }
 }

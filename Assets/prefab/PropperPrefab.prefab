@@ -153,7 +153,9 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 256
+  isHunter: 0
   _CurrentPropID: 0
+  _matchTime: 60
 --- !u!114 &2689563535206479049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,7 +293,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7397418034375221231, guid: ecd47566de652c9489e7913e03d5f0a2, type: 3}
+    - {fileID: 2721625923025532075, guid: ecd47566de652c9489e7913e03d5f0a2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -374,7 +378,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7989456687890293928, guid: fad832ece7f1244449da80e621f5a0b9, type: 3}
+    - {fileID: 2192436541040605395, guid: fad832ece7f1244449da80e621f5a0b9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

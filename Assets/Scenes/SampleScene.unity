@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &192796247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -711,7 +711,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2921818005624604387, guid: ecd47566de652c9489e7913e03d5f0a2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.765812
+      value: 13.26
       objectReference: {fileID: 0}
     - target: {fileID: 2921818005624604387, guid: ecd47566de652c9489e7913e03d5f0a2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -937,7 +937,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1641246960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1046,16 +1046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 416113cc4703b9b41aebfd6ff702a557, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _runner: {fileID: 0}
-  _object: {fileID: 0}
-  Pos: {x: 1, y: 1.5, z: 1}
-  _spawnPoints:
-  - {fileID: 636308620}
-  - {fileID: 470024080}
-  _playerprefab:
-    RawGuidValue:
-    - -6602572137453030955
-    - 6754895470115577016
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
