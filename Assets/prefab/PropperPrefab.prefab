@@ -155,6 +155,7 @@ MonoBehaviour:
     m_Bits: 256
   isHunter: 0
   _CurrentPropID: 0
+  _maxProps: 2
   _matchTime: 60
 --- !u!114 &2689563535206479049
 MonoBehaviour:
@@ -191,8 +192,8 @@ MonoBehaviour:
   _tauntAudioSource: {fileID: 0}
   _humanMesh: {fileID: 8927857220398770068}
   _propMeshes:
-  - {fileID: 8502191986915580484}
   - {fileID: 296899972177771515}
+  - {fileID: 8502191986915580484}
 --- !u!1 &5457485141531837389
 GameObject:
   m_ObjectHideFlags: 0

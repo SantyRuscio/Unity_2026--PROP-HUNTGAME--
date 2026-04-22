@@ -25,6 +25,7 @@ public class Player : NetworkBehaviour
 
     [Header("Prop Hunt Mechanic")]
     [Networked] public int CurrentPropID { get; set; }
+    [SerializeField] private int _maxProps = 2;
     private bool _transformPressed;
 
     [Header("Match Timer")]
@@ -102,7 +103,7 @@ public class Player : NetworkBehaviour
 
         if (_transformPressed)
         {
-            TryTransform();
+            CycleProp(); 
             _transformPressed = false;
         }
 
@@ -161,19 +162,13 @@ public class Player : NetworkBehaviour
         OnJump?.Invoke();
     }
 
-    void TryTransform()
+    void CycleProp()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        CurrentPropID++;
 
-        Debug.DrawRay(ray.origin, ray.direction * 50f, Color.green, 2f);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, 50f))
+        if (CurrentPropID > _maxProps)
         {
-            PropData propData = hit.collider.GetComponent<PropData>();
-            if (propData != null)
-            {
-                CurrentPropID = propData.PropID;
-            }
+            CurrentPropID = 1;
         }
     }
 
