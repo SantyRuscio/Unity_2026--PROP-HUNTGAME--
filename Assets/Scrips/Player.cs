@@ -45,7 +45,7 @@ public class Player : NetworkBehaviour
     {
         if (Object.HasStateAuthority)
         {
-            SetPlayerColor(Color.blue);
+           // SetPlayerColor(Color.blue);
 
             _netRb = GetComponent<NetworkRigidbody3D>();
             Camera.main.GetComponent<CameraFollow>().SetTarget(transform);
@@ -57,7 +57,7 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            SetPlayerColor(Color.red);
+           // SetPlayerColor(Color.red);
         }
     }
 
