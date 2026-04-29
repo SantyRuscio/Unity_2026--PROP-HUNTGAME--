@@ -202,7 +202,7 @@ public class Player : NetworkBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, 50f))
         {
-            Player hitPlayer = hit.collider.GetComponentInParent<Player>();
+            Player hitPlayer = hit.transform.root.GetComponent<Player>();
 
             if (hitPlayer != null && !hitPlayer.isHunter)
             {
