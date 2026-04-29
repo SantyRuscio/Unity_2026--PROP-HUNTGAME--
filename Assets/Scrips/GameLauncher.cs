@@ -4,22 +4,20 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner _runner;
 
-    [Header("Prefabs Asim�tricos")]
-    [SerializeField]
-    private NetworkPrefabRef prefabPlayer1;
+    [Header("Prefabs Asimétricos")]
+    [SerializeField] private NetworkPrefabRef prefabPlayer1;
+    [SerializeField] private NetworkPrefabRef prefabPlayer2;
 
-    [SerializeField]
-    private NetworkPrefabRef prefabPlayer2;
+    [Header("Spawn Points")]
+    [SerializeField] private Transform[] spawnPoints; // 👈 ARRASTRÁS LOS EMPTIES
 
     void Awake()
     {
         QualitySettings.vSyncCount = 0;
-
         Application.targetFrameRate = 60;
     }
 
@@ -40,7 +38,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             SessionName = "SalaObscure",
             CustomPhotonAppSettings = appSettings,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
-
             Scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex)
         });
     }
@@ -54,19 +51,24 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
             if (runner.IsSharedModeMasterClient)
             {
                 prefabParaSpawnear = prefabPlayer1;
-                Debug.Log("Soy el Player 1 (Host). Creando personaje 1...");
+                Debug.Log("Soy el Player 1 (Host)");
             }
             else
             {
                 prefabParaSpawnear = prefabPlayer2;
-                Debug.Log("Soy el Player 2 (Cliente). Creando personaje 2...");
+                Debug.Log("Soy el Player 2 (Cliente)");
             }
 
-            Vector3 randomPosition = new Vector3(UnityEngine.Random.Range(-3f, 3f), 1, UnityEngine.Random.Range(-3f, 3f));
+            // 🔥 ELEGIR SPAWN POINT
+            int spawnIndex = player.RawEncoded % spawnPoints.Length;
+            Transform spawn = spawnPoints[spawnIndex];
 
-            runner.Spawn(prefabParaSpawnear, randomPosition, Quaternion.identity, player);
+            Debug.Log("Spawneando en: " + spawn.name);
+
+            runner.Spawn(prefabParaSpawnear, spawn.position, spawn.rotation, player);
         }
     }
+
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) { }
     public void OnInput(NetworkRunner runner, NetworkInput input) { }
