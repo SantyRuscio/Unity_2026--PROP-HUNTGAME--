@@ -40,6 +40,7 @@ public class Player : NetworkBehaviour
     public event Action OnJump;
     public event Action<bool> OnGroundedChanged;
     public event Action OnTaunt;
+    public event Action OnShoot;
 
     public override void Spawned()
     {
@@ -144,20 +145,39 @@ public class Player : NetworkBehaviour
     void Movement()
     {
         var moveInput = _moveInputReference.action.ReadValue<Vector2>();
-        var velocity = _netRb.Rigidbody.linearVelocity;
 
-        velocity.x = moveInput.x * _speed;
-        velocity.z = moveInput.y * _speed;
+        Transform cam = Camera.main.transform;
+
+        Vector3 forward = cam.forward;
+        Vector3 right = cam.right;
+
+        forward.y = 0;
+        right.y = 0;
+
+        forward.Normalize();
+        right.Normalize();
+
+        Vector3 moveDir = forward * moveInput.y + right * moveInput.x;
+
+        var velocity = _netRb.Rigidbody.linearVelocity;
+        velocity.x = moveDir.x * _speed;
+        velocity.z = moveDir.z * _speed;
         _netRb.Rigidbody.linearVelocity = velocity;
 
-        Vector3 dir = new Vector3(moveInput.x, 0, moveInput.y).normalized;
-        if (dir != Vector3.zero) transform.forward = -dir;
+        CameraFollow camFollow = Camera.main.GetComponent<CameraFollow>();
+        if (camFollow != null)
+        {
+            float yaw = camFollow.GetYaw();
+            transform.rotation = Quaternion.Euler(0, yaw, 0);
+        }
 
         OnMovement?.Invoke(moveInput.magnitude);
     }
 
     void Jump()
     {
+        RPC_PlayJump();
+
         _netRb.Rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
         OnJump?.Invoke();
     }
@@ -174,6 +194,8 @@ public class Player : NetworkBehaviour
 
     void TryShoot()
     {
+        RPC_PlayShoot();
+
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
         Debug.DrawRay(ray.origin, ray.direction * 50f, Color.red, 2f);
@@ -193,5 +215,17 @@ public class Player : NetworkBehaviour
     public void RPC_NotifyGameEnd(string message)
     {
         Debug.LogWarning(message);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayShoot()
+    {
+        OnShoot?.Invoke();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayJump()
+    {
+        OnJump?.Invoke();
     }
 }

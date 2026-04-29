@@ -55,6 +55,8 @@ public class PlayerView : MonoBehaviour
             _player.OnGroundedChanged += HandleGrounded;
 
             _player.OnTaunt += HandleTaunt;
+
+            _player.OnShoot += HandleShoot;
         }
     }
 
@@ -67,6 +69,8 @@ public class PlayerView : MonoBehaviour
             _player.OnGroundedChanged -= HandleGrounded;
 
             _player.OnTaunt -= HandleTaunt;
+
+            _player.OnShoot -= HandleShoot;
         }
     }
 
@@ -95,6 +99,16 @@ public class PlayerView : MonoBehaviour
         if (_tauntAudioSource != null)
         {
             _tauntAudioSource.Play();
+        }
+    }
+
+    void HandleShoot()
+    {
+        _mecanim.Animator.SetTrigger("shoot");
+
+        if (_fireParticles != null)
+        {
+            _fireParticles.Play(); // partículas
         }
     }
 }
