@@ -8,12 +8,14 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 {
     private NetworkRunner _runner;
 
+    public static bool InvertRoles = false;
+
     [Header("Prefabs Asimétricos")]
     [SerializeField] private NetworkPrefabRef prefabPlayer1;
     [SerializeField] private NetworkPrefabRef prefabPlayer2;
 
     [Header("Spawn Points")]
-    [SerializeField] private Transform[] spawnPoints; // 👈 ARRASTRÁS LOS EMPTIES
+    [SerializeField] private Transform[] spawnPoints; 
 
     void Awake()
     {
@@ -48,22 +50,25 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
         {
             NetworkPrefabRef prefabParaSpawnear;
 
-            if (runner.IsSharedModeMasterClient)
+            bool isHost = runner.IsSharedModeMasterClient;
+
+            if (InvertRoles)
+            {
+                isHost = !isHost;
+            }
+
+            if (isHost)
             {
                 prefabParaSpawnear = prefabPlayer1;
-                Debug.Log("Soy el Player 1 (Host)");
+                Debug.Log("Spawneando como Player 1");
             }
             else
             {
                 prefabParaSpawnear = prefabPlayer2;
-                Debug.Log("Soy el Player 2 (Cliente)");
+                Debug.Log("Spawneando como Player 2");
             }
-
-            // 🔥 ELEGIR SPAWN POINT
             int spawnIndex = player.RawEncoded % spawnPoints.Length;
             Transform spawn = spawnPoints[spawnIndex];
-
-            Debug.Log("Spawneando en: " + spawn.name);
 
             runner.Spawn(prefabParaSpawnear, spawn.position, spawn.rotation, player);
         }

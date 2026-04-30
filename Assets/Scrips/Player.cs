@@ -25,12 +25,12 @@ public class Player : NetworkBehaviour
 
     [Header("Prop Hunt Mechanic")]
     [Networked] public int CurrentPropID { get; set; }
-    [SerializeField] private int _maxProps = 2;
+    [SerializeField] private int _maxProps = 15; 
     private bool _transformPressed;
 
     [Header("Match Timer")]
     [Networked] public TickTimer MatchTimer { get; set; }
-    [Networked] public TickTimer HideTimer { get; set; } 
+    [Networked] public TickTimer HideTimer { get; set; }
     [SerializeField] private float _matchTime = 60f;
     [SerializeField] private float _hideTime = 15f;
 
@@ -107,24 +107,22 @@ public class Player : NetworkBehaviour
         {
             if (HideTimer.IsRunning && HideTimer.Expired(Runner))
             {
-                HideTimer = TickTimer.None; 
+                HideTimer = TickTimer.None;
                 MatchTimer = TickTimer.CreateFromSeconds(Runner, _matchTime);
 
-                RPC_NotifyGameEnd("¡CUIDADO! El Hunter ha sido liberado.");
+                Debug.LogWarning("¡CUIDADO! El Hunter ha sido liberado.");
             }
         }
 
-
         bool hunterIsFrozen = isHunter && HideTimer.IsRunning;
 
-        // 3. ACCIONES
-        if (_transformPressed && !isHunter) 
+        if (_transformPressed && !isHunter)
         {
             CycleProp();
             _transformPressed = false;
         }
 
-        if (isHunter && _shootPressed && !hunterIsFrozen) 
+        if (isHunter && _shootPressed && !hunterIsFrozen)
         {
             TryShoot();
             _shootPressed = false;
@@ -132,7 +130,7 @@ public class Player : NetworkBehaviour
 
         if (MatchTimer.IsRunning && MatchTimer.Expired(Runner))
         {
-            RPC_NotifyGameEnd("¡TIEMPO AGOTADO! Victoria de los Props.");
+            RPC_NotifyGameEnd("¡TIEMPO AGOTADO!\nVictoria del propper =).");
             if (Object.HasStateAuthority) MatchTimer = TickTimer.None;
         }
 
@@ -142,7 +140,6 @@ public class Player : NetworkBehaviour
 
         if (!hunterIsFrozen)
         {
-
             Movement();
 
             if (_jumpPressed)
@@ -224,7 +221,6 @@ public class Player : NetworkBehaviour
 
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
-
         RaycastHit[] hits = Physics.SphereCastAll(ray, 0.5f, 50f);
 
         foreach (RaycastHit hit in hits)
@@ -233,8 +229,8 @@ public class Player : NetworkBehaviour
 
             if (hitPlayer != null && !hitPlayer.isHunter)
             {
-                RPC_NotifyGameEnd("¡PROP ENCONTRADO! Victoria del Hunter.");
-                return; 
+                RPC_NotifyGameEnd("¡PROPPER ENCONTRADO!\nGana el Hunter ;P.");
+                return;
             }
         }
     }
@@ -242,7 +238,31 @@ public class Player : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_NotifyGameEnd(string message)
     {
-        Debug.LogWarning(message);
+        MatchTimer = TickTimer.None;
+        HideTimer = TickTimer.None;
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.ShowGameOver(message);
+        }
+        else
+        {
+            Debug.LogWarning(message);
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_RestartGame(bool flipRoles)
+    {
+        if (flipRoles)
+        {
+            GameLauncher.InvertRoles = !GameLauncher.InvertRoles;
+        }
+
+        if (Runner.IsSharedModeMasterClient)
+        {
+            Runner.LoadScene(Fusion.SceneRef.FromIndex(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex));
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
