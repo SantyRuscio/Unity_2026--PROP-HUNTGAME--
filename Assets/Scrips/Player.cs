@@ -30,7 +30,9 @@ public class Player : NetworkBehaviour
 
     [Header("Match Timer")]
     [Networked] public TickTimer MatchTimer { get; set; }
+    [Networked] public TickTimer HideTimer { get; set; } 
     [SerializeField] private float _matchTime = 60f;
+    [SerializeField] private float _hideTime = 15f;
 
     private bool _jumpPressed;
     private bool _isGrounded;
@@ -46,19 +48,18 @@ public class Player : NetworkBehaviour
     {
         if (Object.HasStateAuthority)
         {
-           // SetPlayerColor(Color.blue);
 
             _netRb = GetComponent<NetworkRigidbody3D>();
             Camera.main.GetComponent<CameraFollow>().SetTarget(transform);
 
             if (isHunter)
             {
-                MatchTimer = TickTimer.CreateFromSeconds(Runner, _matchTime);
+                HideTimer = TickTimer.CreateFromSeconds(Runner, _hideTime);
             }
         }
         else
         {
-           // SetPlayerColor(Color.red);
+
         }
     }
 
@@ -102,13 +103,28 @@ public class Player : NetworkBehaviour
     {
         if (Runner.SessionInfo.PlayerCount < 2) return;
 
-        if (_transformPressed)
+        if (isHunter && Object.HasStateAuthority)
         {
-            CycleProp(); 
+            if (HideTimer.IsRunning && HideTimer.Expired(Runner))
+            {
+                HideTimer = TickTimer.None; 
+                MatchTimer = TickTimer.CreateFromSeconds(Runner, _matchTime);
+
+                RPC_NotifyGameEnd("¡CUIDADO! El Hunter ha sido liberado.");
+            }
+        }
+
+
+        bool hunterIsFrozen = isHunter && HideTimer.IsRunning;
+
+        // 3. ACCIONES
+        if (_transformPressed && !isHunter) 
+        {
+            CycleProp();
             _transformPressed = false;
         }
 
-        if (isHunter && _shootPressed)
+        if (isHunter && _shootPressed && !hunterIsFrozen) 
         {
             TryShoot();
             _shootPressed = false;
@@ -123,11 +139,21 @@ public class Player : NetworkBehaviour
         if (!Object.HasStateAuthority) return;
 
         CheckGround();
-        Movement();
 
-        if (_jumpPressed)
+        if (!hunterIsFrozen)
         {
-            if (_isGrounded) Jump();
+
+            Movement();
+
+            if (_jumpPressed)
+            {
+                if (_isGrounded) Jump();
+                _jumpPressed = false;
+            }
+        }
+        else
+        {
+            _netRb.Rigidbody.linearVelocity = new Vector3(0, _netRb.Rigidbody.linearVelocity.y, 0);
             _jumpPressed = false;
         }
     }
