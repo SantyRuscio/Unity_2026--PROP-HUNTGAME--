@@ -224,15 +224,17 @@ public class Player : NetworkBehaviour
 
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
-        Debug.DrawRay(ray.origin, ray.direction * 50f, Color.red, 2f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 50f))
+        RaycastHit[] hits = Physics.SphereCastAll(ray, 0.5f, 50f);
+
+        foreach (RaycastHit hit in hits)
         {
             Player hitPlayer = hit.transform.root.GetComponent<Player>();
 
             if (hitPlayer != null && !hitPlayer.isHunter)
             {
                 RPC_NotifyGameEnd("¡PROP ENCONTRADO! Victoria del Hunter.");
+                return; 
             }
         }
     }

@@ -157,6 +157,7 @@ MonoBehaviour:
   _CurrentPropID: 0
   _maxProps: 2
   _matchTime: 60
+  _hideTime: 15
 --- !u!114 &2689563535206479049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,7 +263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2921818005624604387, guid: ecd47566de652c9489e7913e03d5f0a2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2921818005624604387, guid: ecd47566de652c9489e7913e03d5f0a2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -347,7 +348,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8815655371633204422, guid: fad832ece7f1244449da80e621f5a0b9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8815655371633204422, guid: fad832ece7f1244449da80e621f5a0b9, type: 3}
       propertyPath: m_LocalPosition.z
