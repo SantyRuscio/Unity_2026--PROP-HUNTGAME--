@@ -10,6 +10,12 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
     public static bool InvertRoles = false;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ReiniciarVariablesEstaticas()
+    {
+        InvertRoles = false;
+    }
+
     [Header("Prefabs Asimétricos")]
     [SerializeField] private NetworkPrefabRef prefabPlayer1;
     [SerializeField] private NetworkPrefabRef prefabPlayer2;
@@ -48,29 +54,26 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (player == runner.LocalPlayer)
         {
-            NetworkPrefabRef prefabParaSpawnear;
-
             bool isHost = runner.IsSharedModeMasterClient;
 
-            if (InvertRoles)
-            {
-                isHost = !isHost;
-            }
+            NetworkPrefabRef prefabParaSpawnear = isHost ? prefabPlayer1 : prefabPlayer2;
+            string nombreDelSpawn = isHost ? "Spawn_Player1" : "Spawn_Player2";
 
-            if (isHost)
+            GameObject puntoDeSpawn = GameObject.Find(nombreDelSpawn);
+            Vector3 spawnPosition = Vector3.zero;
+            Quaternion spawnRotation = Quaternion.identity;
+
+            if (puntoDeSpawn != null)
             {
-                prefabParaSpawnear = prefabPlayer1;
-                Debug.Log("Spawneando como Player 1");
+                spawnPosition = puntoDeSpawn.transform.position;
+                spawnRotation = puntoDeSpawn.transform.rotation;
             }
             else
             {
-                prefabParaSpawnear = prefabPlayer2;
-                Debug.Log("Spawneando como Player 2");
+                Debug.LogWarning($"No encontrado el objeto '{nombreDelSpawn}'");
             }
-            int spawnIndex = player.RawEncoded % spawnPoints.Length;
-            Transform spawn = spawnPoints[spawnIndex];
 
-            runner.Spawn(prefabParaSpawnear, spawn.position, spawn.rotation, player);
+            runner.Spawn(prefabParaSpawnear, spawnPosition, spawnRotation, player);
         }
     }
 

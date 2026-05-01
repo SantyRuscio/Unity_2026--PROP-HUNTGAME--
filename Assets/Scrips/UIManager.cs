@@ -26,21 +26,17 @@ public class UIManager : MonoBehaviour
 
     public void Btn_RestartNormal()
     {
-        TriggerRestart(false);
+        TriggerRestart();
     }
 
-    public void Btn_InvertRoles()
-    {
-        TriggerRestart(true);
-    }
 
-    private void TriggerRestart(bool flipRoles)
+    private void TriggerRestart()
     {
         foreach (var player in FindObjectsByType<Player>(FindObjectsSortMode.None))
         {
             if (player.Object.HasStateAuthority)
             {
-                player.RPC_RestartGame(flipRoles);
+                player.RPC_RestartGame();
                 break;
             }
         }
