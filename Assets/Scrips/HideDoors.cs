@@ -1,14 +1,20 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Fusion;
-
 public class HideDoors : NetworkBehaviour
 {
     [Networked] private bool puertasAbiertas { get; set; }
 
+    private AudioSource audioSource;
+    private bool sonidoReproducido = false;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     void Update()
     {
         Player hunter = BuscarHunter();
-
         if (hunter == null) return;
 
         if (Object.HasStateAuthority)
@@ -16,6 +22,8 @@ public class HideDoors : NetworkBehaviour
             if (!hunter.HideTimer.IsRunning && !puertasAbiertas)
             {
                 puertasAbiertas = true;
+
+                RPC_PlaySound();
             }
         }
 
@@ -30,6 +38,16 @@ public class HideDoors : NetworkBehaviour
         foreach (Transform hijo in transform)
         {
             hijo.gameObject.SetActive(false);
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_PlaySound()
+    {
+        if (audioSource != null && !sonidoReproducido)
+        {
+            audioSource.Play();
+            sonidoReproducido = true;
         }
     }
 

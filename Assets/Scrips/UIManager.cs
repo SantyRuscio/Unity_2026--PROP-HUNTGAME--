@@ -1,3 +1,4 @@
+﻿using UnityEngine;
 using UnityEngine;
 using TMPro;
 
@@ -15,7 +16,9 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        gameOverPanel.SetActive(false);
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
 
         if (hideTimerText != null)
             hideTimerText.gameObject.SetActive(false);
@@ -27,7 +30,8 @@ public class UIManager : MonoBehaviour
 
         Player hunter = BuscarHunter();
 
-        if (hunter == null)
+        // 🔥 Protección total (Fusion safe)
+        if (hunter == null || hunter.Runner == null || !hunter.Object.IsValid)
         {
             hideTimerText.gameObject.SetActive(false);
             return;
@@ -41,22 +45,18 @@ public class UIManager : MonoBehaviour
             hideTimerText.text = "Tiempo De Escondite: " + segundos;
 
             if (segundos <= 3)
-            {
                 hideTimerText.color = Color.red;
-            }
             else
-            {
                 hideTimerText.color = Color.white;
-            }
 
             hideTimerText.gameObject.SetActive(true);
         }
         else
         {
             hideTimerText.gameObject.SetActive(false);
+            hideTimerText.color = Color.white; // reset
         }
     }
-
 
     Player BuscarHunter()
     {
@@ -64,7 +64,7 @@ public class UIManager : MonoBehaviour
 
         foreach (var p in players)
         {
-            if (p.isHunter)
+            if (p != null && p.isHunter)
                 return p;
         }
 
@@ -73,8 +73,11 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOver(string message)
     {
-        gameOverPanel.SetActive(true);
-        winnerText.text = message;
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+
+        if (winnerText != null)
+            winnerText.text = message;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -89,7 +92,7 @@ public class UIManager : MonoBehaviour
     {
         foreach (var player in FindObjectsByType<Player>(FindObjectsSortMode.None))
         {
-            if (player.Object.HasStateAuthority)
+            if (player != null && player.Object.HasStateAuthority)
             {
                 player.RPC_RestartGame();
                 break;

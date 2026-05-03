@@ -18,25 +18,28 @@ public class Player : NetworkBehaviour
     [SerializeField] private float _groundCheckDistance = 1.1f;
     [SerializeField] private LayerMask _groundLayer;
 
-    [Header("Roles del Parcial")]
-    [Tooltip("Tildar solo en el prefab del Hunter")]
+    [Header("Roles")]
     public bool isHunter;
     private bool _shootPressed;
 
-    [Header("Prop Hunt Mechanic")]
+    [Header("Prop Hunt")]
     [Networked] public int CurrentPropID { get; set; }
     [SerializeField] private int _maxProps = 15;
     private bool _transformPressed;
 
-    [Header("Match Timer")]
+    [Header("Timers")]
     [Networked] public TickTimer MatchTimer { get; set; }
     [Networked] public TickTimer HideTimer { get; set; }
     [SerializeField] private float _matchTime = 60f;
     [SerializeField] private float _hideTime = 15f;
 
+    [Header("Taunt (Silbido)")]
+    [SerializeField] private AudioSource tauntAudio;
+    [SerializeField] private float tauntCooldown = 5f;
+    private float lastTauntTime = -999f;
+
     private bool _jumpPressed;
     private bool _isGrounded;
-    public bool IsGrounded => _isGrounded;
 
     public event Action<float> OnMovement;
     public event Action OnJump;
@@ -62,7 +65,8 @@ public class Player : NetworkBehaviour
     {
         if (!Object.HasStateAuthority) return;
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame) _jumpPressed = true;
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            _jumpPressed = true;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -70,22 +74,32 @@ public class Player : NetworkBehaviour
             else _transformPressed = true;
         }
 
-        if (Keyboard.current.tKey.wasPressedThisFrame)
+        // TAUNT
+        if (Keyboard.current.tKey.wasPressedThisFrame && !isHunter)
         {
-            RPC_PlayTaunt();
+            if (Time.time >= lastTauntTime + tauntCooldown)
+            {
+                lastTauntTime = Time.time;
+                RPC_PlayTaunt();
+            }
         }
     }
 
+    // RPC para que TODOS escuchen el sonido
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_PlayTaunt()
     {
         OnTaunt?.Invoke();
+
+        if (tauntAudio != null)
+        {
+            tauntAudio.Play();
+        }
     }
 
     public override void FixedUpdateNetwork()
     {
         if (Runner.SessionInfo.PlayerCount < 2) return;
-
 
         if (isHunter && Object.HasStateAuthority)
         {
@@ -93,7 +107,7 @@ public class Player : NetworkBehaviour
             {
                 HideTimer = TickTimer.None;
                 MatchTimer = TickTimer.CreateFromSeconds(Runner, _matchTime);
-                Debug.LogWarning("¡CUIDADO! El Hunter ha sido liberado.");
+                Debug.Log("Hunter liberado");
             }
         }
 
@@ -113,7 +127,7 @@ public class Player : NetworkBehaviour
 
         if (MatchTimer.IsRunning && MatchTimer.Expired(Runner))
         {
-            RPC_NotifyGameEnd("¡TIEMPO AGOTADO!\nVictoria de los Props.");
+            RPC_NotifyGameEnd("¡TIEMPO AGOTADO!\nGanan los Props");
             if (Object.HasStateAuthority) MatchTimer = TickTimer.None;
         }
 
@@ -145,7 +159,8 @@ public class Player : NetworkBehaviour
 
         _isGrounded = Physics.Raycast(origin, Vector3.down, _groundCheckDistance, _groundLayer);
 
-        if (wasGrounded != _isGrounded) OnGroundedChanged?.Invoke(_isGrounded);
+        if (wasGrounded != _isGrounded)
+            OnGroundedChanged?.Invoke(_isGrounded);
     }
 
     void Movement()
@@ -170,12 +185,8 @@ public class Player : NetworkBehaviour
         velocity.z = moveDir.z * _speed;
         _netRb.Rigidbody.linearVelocity = velocity;
 
-        CameraFollow camFollow = Camera.main.GetComponent<CameraFollow>();
-        if (camFollow != null)
-        {
-            float yaw = camFollow.GetYaw();
-            transform.rotation = Quaternion.Euler(0, yaw, 0);
-        }
+        float yaw = Camera.main.GetComponent<CameraFollow>().GetYaw();
+        transform.rotation = Quaternion.Euler(0, yaw, 0);
 
         OnMovement?.Invoke(moveInput.magnitude);
     }
@@ -191,9 +202,7 @@ public class Player : NetworkBehaviour
     {
         CurrentPropID++;
         if (CurrentPropID > _maxProps)
-        {
             CurrentPropID = 1;
-        }
     }
 
     void TryShoot()
@@ -203,28 +212,38 @@ public class Player : NetworkBehaviour
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit[] hits = Physics.SphereCastAll(ray, 0.5f, 50f);
 
-        foreach (RaycastHit hit in hits)
+        foreach (var hit in hits)
         {
-            Player hitPlayer = hit.transform.root.GetComponent<Player>();
+            Player p = hit.transform.root.GetComponent<Player>();
 
-            if (hitPlayer != null && !hitPlayer.isHunter)
+            if (p != null && !p.isHunter)
             {
-                RPC_NotifyGameEnd("¡PROP ENCONTRADO!\nVictoria del Hunter.");
+                RPC_NotifyGameEnd("¡PROP ENCONTRADO!\nGana el Hunter");
                 return;
             }
         }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_NotifyGameEnd(string message)
+    public void RPC_NotifyGameEnd(string msg)
     {
         MatchTimer = TickTimer.None;
         HideTimer = TickTimer.None;
 
         if (UIManager.Instance != null)
-        {
-            UIManager.Instance.ShowGameOver(message);
-        }
+            UIManager.Instance.ShowGameOver(msg);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayShoot()
+    {
+        OnShoot?.Invoke();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayJump()
+    {
+        OnJump?.Invoke();
     }
 
 
@@ -239,58 +258,21 @@ public class Player : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        // Resetear timers
+        MatchTimer = TickTimer.None;
+        HideTimer = TickTimer.None;
 
-        Player[] todosLosJugadores = FindObjectsByType<Player>(FindObjectsSortMode.None);
-        foreach (Player p in todosLosJugadores)
-        {
-            if (p.Object.HasStateAuthority)
-            {
-                p.EjecutarReinicioLocal();
-            }
-        }
-    }
+        // Resetear posición
+        string spawnName = isHunter ? "Spawn_Player1" : "Spawn_Player2";
+        GameObject spawn = GameObject.Find(spawnName);
 
-    public void EjecutarReinicioLocal()
-    {
-        CurrentPropID = 0;
-
-        if (isHunter)
-        {
-            HideTimer = TickTimer.CreateFromSeconds(Runner, _hideTime);
-            MatchTimer = TickTimer.None;
-        }
-        else
-        {
-            MatchTimer = TickTimer.None;
-        }
-
-        string nombreDelSpawn = isHunter ? "Spawn_Player1" : "Spawn_Player2";
-        GameObject puntoDeSpawn = GameObject.Find(nombreDelSpawn);
-
-        if (puntoDeSpawn != null)
+        if (spawn != null)
         {
             _netRb.Rigidbody.linearVelocity = Vector3.zero;
             _netRb.Rigidbody.angularVelocity = Vector3.zero;
 
-            _netRb.Rigidbody.position = puntoDeSpawn.transform.position;
-            transform.position = puntoDeSpawn.transform.position;
-            transform.rotation = puntoDeSpawn.transform.rotation;
+            transform.position = spawn.transform.position;
+            transform.rotation = spawn.transform.rotation;
         }
-        else
-        {
-            Debug.LogWarning($"Reinicio: No encontré el punto de spawn {nombreDelSpawn}");
-        }
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_PlayShoot()
-    {
-        OnShoot?.Invoke();
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_PlayJump()
-    {
-        OnJump?.Invoke();
     }
 }
