@@ -27,6 +27,10 @@ public class Player : NetworkBehaviour
     [SerializeField] private int _maxProps = 15;
     private bool _transformPressed;
 
+    [Header("LOCK (Freeze Prop)")]
+    private bool _lockPressed;
+    [Networked] private bool _isLocked { get; set; }
+
     [Header("Timers")]
     [Networked] public TickTimer MatchTimer { get; set; }
     [Networked] public TickTimer HideTimer { get; set; }
@@ -83,9 +87,14 @@ public class Player : NetworkBehaviour
                 RPC_PlayTaunt();
             }
         }
+
+        // LOCK PROP (F)
+        if (Keyboard.current.fKey.wasPressedThisFrame && !isHunter)
+        {
+            _lockPressed = true;
+        }
     }
 
-    // RPC para que TODOS escuchen el sonido
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_PlayTaunt()
     {
@@ -113,6 +122,13 @@ public class Player : NetworkBehaviour
 
         bool hunterIsFrozen = isHunter && HideTimer.IsRunning;
 
+        // TOGGLE LOCK
+        if (_lockPressed && !isHunter)
+        {
+            _isLocked = !_isLocked;
+            _lockPressed = false;
+        }
+
         if (_transformPressed && !isHunter)
         {
             CycleProp();
@@ -135,7 +151,7 @@ public class Player : NetworkBehaviour
 
         CheckGround();
 
-        if (!hunterIsFrozen)
+        if (!hunterIsFrozen && !_isLocked)
         {
             Movement();
 
@@ -147,7 +163,9 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            _netRb.Rigidbody.linearVelocity = new Vector3(0, _netRb.Rigidbody.linearVelocity.y, 0);
+            // FREEZE TOTAL
+            _netRb.Rigidbody.linearVelocity = Vector3.zero;
+            _netRb.Rigidbody.angularVelocity = Vector3.zero;
             _jumpPressed = false;
         }
     }
@@ -186,7 +204,12 @@ public class Player : NetworkBehaviour
         _netRb.Rigidbody.linearVelocity = velocity;
 
         float yaw = Camera.main.GetComponent<CameraFollow>().GetYaw();
-        transform.rotation = Quaternion.Euler(0, yaw, 0);
+
+        // BLOQUEAR ROTACIÓN SI ESTÁ LOCKED
+        if (!_isLocked)
+        {
+            transform.rotation = Quaternion.Euler(0, yaw, 0);
+        }
 
         OnMovement?.Invoke(moveInput.magnitude);
     }
@@ -246,7 +269,6 @@ public class Player : NetworkBehaviour
         OnJump?.Invoke();
     }
 
-
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_RestartGame()
     {
@@ -258,11 +280,9 @@ public class Player : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Resetear timers
         MatchTimer = TickTimer.None;
         HideTimer = TickTimer.None;
 
-        // Resetear posición
         string spawnName = isHunter ? "Spawn_Player1" : "Spawn_Player2";
         GameObject spawn = GameObject.Find(spawnName);
 
