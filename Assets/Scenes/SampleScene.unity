@@ -210,6 +210,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Clothes_Hanger
       objectReference: {fileID: 0}
+    - target: {fileID: 5246407817298231480, guid: 9d95c079dccd14942aceaac7175ed20b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -282,6 +286,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6bf31b999c69c794396a2bb179c04484, type: 3}
       propertyPath: m_Name
       value: towel-stack
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6bf31b999c69c794396a2bb179c04484, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -788,6 +796,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PC_Mouse
       objectReference: {fileID: 0}
+    - target: {fileID: 1566978063473202252, guid: 72ca7aeda21ec674b9bfb91123d0e263, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2230643644561755894, guid: 72ca7aeda21ec674b9bfb91123d0e263, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.4685004
@@ -990,6 +1002,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cafe_Coffee_Cup_1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ac95e458fcfe21f4a919fc173d62c9ee, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1059,6 +1075,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: T_Shirt
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 41fbcd27dec48044e98328158c32ef43, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1102,6 +1122,10 @@ PrefabInstance:
     - target: {fileID: 1718168808075974305, guid: dffaeff4e54ac454abadfffac06f480f, type: 3}
       propertyPath: m_Name
       value: Plate
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718168808075974305, guid: dffaeff4e54ac454abadfffac06f480f, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2059264065841531931, guid: dffaeff4e54ac454abadfffac06f480f, type: 3}
       propertyPath: m_LocalScale.x
@@ -1270,7 +1294,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 286882510}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HouseInterior
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1400,12 +1424,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: c9ba9c806eb9d7148aa848f792840649, type: 2}
     - target: {fileID: -1346226356176289419, guid: 8b4bff8640b163f49b90542f62d2163f, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -1346226356176289419, guid: 8b4bff8640b163f49b90542f62d2163f, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8b4bff8640b163f49b90542f62d2163f, type: 3}
       propertyPath: m_Name
       value: tv_stand
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8b4bff8640b163f49b90542f62d2163f, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5649003509380790531, guid: 8b4bff8640b163f49b90542f62d2163f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -1415,6 +1447,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 5ad2e0fe50251cd45968b4ca41803da8, type: 2}
+    - target: {fileID: 9180487750208703630, guid: 8b4bff8640b163f49b90542f62d2163f, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1731,6 +1767,10 @@ PrefabInstance:
     - target: {fileID: 1072583938251779072, guid: 636cd0f57c70ba442aebc84eb12e10b2, type: 3}
       propertyPath: m_Name
       value: Keyboard (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1072583938251779072, guid: 636cd0f57c70ba442aebc84eb12e10b2, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2103,6 +2143,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cafe_Shelf_with_hooks_1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c1fa69976a0f05b45b9b3b6945f2976d, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2120,7 +2164,7 @@ GameObject:
   - component: {fileID: 459635602}
   - component: {fileID: 459635601}
   - component: {fileID: 459635600}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2337,6 +2381,10 @@ PrefabInstance:
     - target: {fileID: 2176255894448548762, guid: 318e9a0b0b3e1ba47b261823de4c59dc, type: 3}
       propertyPath: m_Name
       value: Storage_Box_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176255894448548762, guid: 318e9a0b0b3e1ba47b261823de4c59dc, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2571,6 +2619,10 @@ PrefabInstance:
     - target: {fileID: 2185891953866781079, guid: 2f5c771d3fe5d0a429eb9d6aeaf7f3d7, type: 3}
       propertyPath: m_Name
       value: Washstand
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185891953866781079, guid: 2f5c771d3fe5d0a429eb9d6aeaf7f3d7, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2977,6 +3029,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Faucet
       objectReference: {fileID: 0}
+    - target: {fileID: 8665118343272131635, guid: 57fc163d359a36544afdc090a3b49123, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3103,8 +3159,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 06add46b07926004883d325ae5af9c35, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 877286370}
   m_SourcePrefab: {fileID: 100100000, guid: 06add46b07926004883d325ae5af9c35, type: 3}
+--- !u!1 &877286369 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 06add46b07926004883d325ae5af9c35, type: 3}
+  m_PrefabInstance: {fileID: 877286368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &877286370
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877286369}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.56399167, y: 0.5639914, z: 0.13132568}
+  m_Center: {x: 0.0000024437904, y: -0.2819957, z: 0.06566284}
 --- !u!4 &885891705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c1fa69976a0f05b45b9b3b6945f2976d, type: 3}
@@ -3238,6 +3323,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Jar_2
       objectReference: {fileID: 0}
+    - target: {fileID: 6881184231077370407, guid: f39d55a2aa6319049b48a7bc46ba707d, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3311,6 +3400,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a3f4a7b5a924b6848b54c97e29beb336, type: 3}
       propertyPath: m_Name
       value: Cafe_Cup_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a3f4a7b5a924b6848b54c97e29beb336, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4107,6 +4200,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PC_Monitor (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3734611379897310439, guid: d9c9480afa265d94896e13edc024af89, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4080210616048502365, guid: d9c9480afa265d94896e13edc024af89, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.7338002
@@ -4313,6 +4410,10 @@ PrefabInstance:
     - target: {fileID: 1072583938251779072, guid: 636cd0f57c70ba442aebc84eb12e10b2, type: 3}
       propertyPath: m_Name
       value: Keyboard
+      objectReference: {fileID: 0}
+    - target: {fileID: 1072583938251779072, guid: 636cd0f57c70ba442aebc84eb12e10b2, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4535,6 +4636,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cafe_Cabinet_2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f2b8d9bc72c5e3e43bb531b349c020df, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4618,6 +4723,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8153468022190502949, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -8035857614479882688, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.5038
@@ -4657,6 +4766,14 @@ PrefabInstance:
     - target: {fileID: -8035857614479882688, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 179.971
+      objectReference: {fileID: 0}
+    - target: {fileID: -7640558969779515294, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -7029948723529949830, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -5894863403822994359, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
       propertyPath: m_LocalScale.x
@@ -4742,6 +4859,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -180
       objectReference: {fileID: 0}
+    - target: {fileID: -3756473180518285571, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -775069670341356040, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.3624
@@ -4769,6 +4890,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
       propertyPath: m_Name
       value: Low Poly Bathroom Assets
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1578115775279380021, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4865,6 +4990,14 @@ PrefabInstance:
     - target: {fileID: 6830945432629781959, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 3.523
+      objectReference: {fileID: 0}
+    - target: {fileID: 8009987137999418058, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485173162082002552, guid: 55ef352efaa5fdd468ac1517c7bd6e3a, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -5208,6 +5341,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fridge (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1909556844718795155, guid: 2f4e5a6eba1558d4db8188cf10efa331, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5352,6 +5489,10 @@ PrefabInstance:
     - target: {fileID: 1094951735131250708, guid: 9461777cb8291244a9430141b75376b1, type: 3}
       propertyPath: m_Name
       value: Cabinet_2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1094951735131250708, guid: 9461777cb8291244a9430141b75376b1, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5605,6 +5746,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cafe_Cabinet_2
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f2b8d9bc72c5e3e43bb531b349c020df, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5850,6 +5995,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cafe_Shelf_1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e1929e6a49aad8c4c80d7200989b85cf, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5922,6 +6071,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Teapot
       objectReference: {fileID: 0}
+    - target: {fileID: 8671807156809105900, guid: afa9335d56adaf14380939aa9e3480ce, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5992,9 +6145,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7029948723529949830, guid: 38ddec34582cdfb4ca1391da9037b274, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -6733177361254619370, guid: 38ddec34582cdfb4ca1391da9037b274, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 38ddec34582cdfb4ca1391da9037b274, type: 3}
       propertyPath: m_Name
       value: towel rack
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 38ddec34582cdfb4ca1391da9037b274, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6013,7 +6178,7 @@ GameObject:
   - component: {fileID: 1559048890}
   - component: {fileID: 1559048889}
   - component: {fileID: 1559048888}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6291,6 +6456,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fridge
       objectReference: {fileID: 0}
+    - target: {fileID: 1909556844718795155, guid: 2f4e5a6eba1558d4db8188cf10efa331, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6365,6 +6534,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Painting_3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 06add46b07926004883d325ae5af9c35, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6434,6 +6607,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cabinet_2
       objectReference: {fileID: 0}
+    - target: {fileID: 1094951735131250708, guid: 9461777cb8291244a9430141b75376b1, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6450,6 +6627,10 @@ PrefabInstance:
     - target: {fileID: 3734611379897310439, guid: d9c9480afa265d94896e13edc024af89, type: 3}
       propertyPath: m_Name
       value: PC_Monitor (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3734611379897310439, guid: d9c9480afa265d94896e13edc024af89, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4080210616048502365, guid: d9c9480afa265d94896e13edc024af89, type: 3}
       propertyPath: m_LocalScale.x
@@ -6652,6 +6833,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Iron
       objectReference: {fileID: 0}
+    - target: {fileID: 8521768854450964753, guid: bdd35528c5da7724e9b4a3b8535d6555, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 9009652488138773419, guid: bdd35528c5da7724e9b4a3b8535d6555, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.8485
@@ -6721,6 +6906,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bed (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1269166654898898990, guid: af1aef1d4814d354a80e8138f2b99fde, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1934063998722200212, guid: af1aef1d4814d354a80e8138f2b99fde, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.0420222
@@ -6789,6 +6978,10 @@ PrefabInstance:
     - target: {fileID: 3734611379897310439, guid: d9c9480afa265d94896e13edc024af89, type: 3}
       propertyPath: m_Name
       value: PC_Monitor
+      objectReference: {fileID: 0}
+    - target: {fileID: 3734611379897310439, guid: d9c9480afa265d94896e13edc024af89, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4080210616048502365, guid: d9c9480afa265d94896e13edc024af89, type: 3}
       propertyPath: m_LocalScale.x
@@ -6978,8 +7171,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0dc640885cda7124490a95aceb9078a3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1723960816}
   m_SourcePrefab: {fileID: 100100000, guid: 0dc640885cda7124490a95aceb9078a3, type: 3}
+--- !u!1 &1723960815 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0dc640885cda7124490a95aceb9078a3, type: 3}
+  m_PrefabInstance: {fileID: 1723960814}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1723960816
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723960815}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5639911, y: 0.5639915, z: 0.13109864}
+  m_Center: {x: 0.000002741814, y: -0.28199574, z: 0.06554932}
 --- !u!1001 &1736499852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7043,6 +7265,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e1929e6a49aad8c4c80d7200989b85cf, type: 3}
       propertyPath: m_Name
       value: Cafe_Shelf_1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e1929e6a49aad8c4c80d7200989b85cf, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7489,8 +7715,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc39f5f88f083eb4cadf2a773e34e3ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1873051725}
   m_SourcePrefab: {fileID: 100100000, guid: bc39f5f88f083eb4cadf2a773e34e3ec, type: 3}
+--- !u!1 &1873051724 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: bc39f5f88f083eb4cadf2a773e34e3ec, type: 3}
+  m_PrefabInstance: {fileID: 1873051723}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1873051725
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873051724}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5447556, y: 1.1603357, z: 0.95980954}
+  m_Center: {x: -0.0000029504297, y: 0.5754649, z: 0.00000026822087}
 --- !u!1001 &1907538719
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7555,6 +7810,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cafe_Shelf_1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e1929e6a49aad8c4c80d7200989b85cf, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7571,6 +7830,10 @@ PrefabInstance:
     - target: {fileID: 1269166654898898990, guid: af1aef1d4814d354a80e8138f2b99fde, type: 3}
       propertyPath: m_Name
       value: Bed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1269166654898898990, guid: af1aef1d4814d354a80e8138f2b99fde, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1934063998722200212, guid: af1aef1d4814d354a80e8138f2b99fde, type: 3}
       propertyPath: m_LocalScale.x
@@ -7698,6 +7961,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cafe_Coffee_Machine_1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2145d774897be454984bb09e2e4c5a9f, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7800,8 +8067,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc39f5f88f083eb4cadf2a773e34e3ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2078724865}
   m_SourcePrefab: {fileID: 100100000, guid: bc39f5f88f083eb4cadf2a773e34e3ec, type: 3}
+--- !u!1 &2078724864 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: bc39f5f88f083eb4cadf2a773e34e3ec, type: 3}
+  m_PrefabInstance: {fileID: 2078724863}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2078724865
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078724864}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5447556, y: 1.1603357, z: 0.95980954}
+  m_Center: {x: -0.0000029504297, y: 0.5754649, z: 0.00000026822087}
 --- !u!4 &2135536280 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 322531161127680686, guid: 9461777cb8291244a9430141b75376b1, type: 3}
@@ -7828,6 +8124,10 @@ PrefabInstance:
     - target: {fileID: 683770469846286580, guid: 236ab99438c154546834a541fea827e6, type: 3}
       propertyPath: m_Name
       value: Jar_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 683770469846286580, guid: 236ab99438c154546834a541fea827e6, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 683770469846286580, guid: 236ab99438c154546834a541fea827e6, type: 3}
       propertyPath: m_IsActive
@@ -7886,9 +8186,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 286882510}
     m_Modifications:
+    - target: {fileID: 620414990096515933, guid: 3213cc9242ddac2409e7e3ff5e221510, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6990690085704974395, guid: 3213cc9242ddac2409e7e3ff5e221510, type: 3}
       propertyPath: m_Name
       value: Trash Bag
+      objectReference: {fileID: 0}
+    - target: {fileID: 6990690085704974395, guid: 3213cc9242ddac2409e7e3ff5e221510, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6990690085704974395, guid: 3213cc9242ddac2409e7e3ff5e221510, type: 3}
       propertyPath: m_IsActive
@@ -7992,6 +8300,10 @@ PrefabInstance:
       value: Jar_1
       objectReference: {fileID: 0}
     - target: {fileID: 8522788265370431115, guid: 427aa1fe2eebd0f47a8430e887d81833, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8522788265370431115, guid: 427aa1fe2eebd0f47a8430e887d81833, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -8011,6 +8323,10 @@ PrefabInstance:
     - target: {fileID: 2444902901754509274, guid: 4a2be2ebfc05e6044b4ba1269f052250, type: 3}
       propertyPath: m_Name
       value: Pillow_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2444902901754509274, guid: 4a2be2ebfc05e6044b4ba1269f052250, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2444902901754509274, guid: 4a2be2ebfc05e6044b4ba1269f052250, type: 3}
       propertyPath: m_IsActive
@@ -8114,6 +8430,10 @@ PrefabInstance:
       value: Cafe_Coffee_Bag_3
       objectReference: {fileID: 0}
     - target: {fileID: 4175992490740857368, guid: eb956010dce0e264382bd808733bfa44, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175992490740857368, guid: eb956010dce0e264382bd808733bfa44, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -8143,6 +8463,10 @@ PrefabInstance:
     - target: {fileID: 8217209203356773296, guid: 2de6ae66dd7106e428351779c0454154, type: 3}
       propertyPath: m_Name
       value: Cafe_Plant_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8217209203356773296, guid: 2de6ae66dd7106e428351779c0454154, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8217209203356773296, guid: 2de6ae66dd7106e428351779c0454154, type: 3}
       propertyPath: m_IsActive
@@ -8246,6 +8570,10 @@ PrefabInstance:
       value: Plant_2
       objectReference: {fileID: 0}
     - target: {fileID: 5078080399220744399, guid: 2c67e500cb328754ea709979c57af853, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5078080399220744399, guid: 2c67e500cb328754ea709979c57af853, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -8265,6 +8593,10 @@ PrefabInstance:
     - target: {fileID: 1740084010788674804, guid: bf157352c982c3045a5f039282f0a433, type: 3}
       propertyPath: m_Name
       value: Mirror
+      objectReference: {fileID: 0}
+    - target: {fileID: 1740084010788674804, guid: bf157352c982c3045a5f039282f0a433, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1740084010788674804, guid: bf157352c982c3045a5f039282f0a433, type: 3}
       propertyPath: m_IsActive
@@ -8429,6 +8761,10 @@ PrefabInstance:
       value: Table
       objectReference: {fileID: 0}
     - target: {fileID: 2905000532320712627, guid: 9c29ad9229fc18b4db498f86ee1a1e4b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2905000532320712627, guid: 9c29ad9229fc18b4db498f86ee1a1e4b, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -8445,6 +8781,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 286882510}
     m_Modifications:
+    - target: {fileID: 2533926319849166144, guid: 68a032c5fcafeba46a5b730fef4ab224, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6191406999596201763, guid: 68a032c5fcafeba46a5b730fef4ab224, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.119896
@@ -8490,6 +8830,10 @@ PrefabInstance:
       value: TV
       objectReference: {fileID: 0}
     - target: {fileID: 6820591067297754521, guid: 68a032c5fcafeba46a5b730fef4ab224, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6820591067297754521, guid: 68a032c5fcafeba46a5b730fef4ab224, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -8514,6 +8858,10 @@ PrefabInstance:
     - target: {fileID: 129454442280692794, guid: 027dd7e548a40334a906475ea9528311, type: 3}
       propertyPath: m_Name
       value: Ironing_Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 129454442280692794, guid: 027dd7e548a40334a906475ea9528311, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 129454442280692794, guid: 027dd7e548a40334a906475ea9528311, type: 3}
       propertyPath: m_IsActive
@@ -8575,6 +8923,10 @@ PrefabInstance:
     - target: {fileID: 8561806942384499332, guid: bd0fcc80f38cd1d40ae413ebb1c735fc, type: 3}
       propertyPath: m_Name
       value: Plant_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8561806942384499332, guid: bd0fcc80f38cd1d40ae413ebb1c735fc, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8561806942384499332, guid: bd0fcc80f38cd1d40ae413ebb1c735fc, type: 3}
       propertyPath: m_IsActive
