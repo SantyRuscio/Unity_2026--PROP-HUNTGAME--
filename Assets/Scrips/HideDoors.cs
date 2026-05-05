@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Fusion;
+
 public class HideDoors : NetworkBehaviour
 {
     [Networked] private bool puertasAbiertas { get; set; }
@@ -22,22 +23,12 @@ public class HideDoors : NetworkBehaviour
             if (!hunter.HideTimer.IsRunning && !puertasAbiertas)
             {
                 puertasAbiertas = true;
-
                 RPC_PlaySound();
             }
         }
-
-        if (puertasAbiertas)
-        {
-            DesactivarPuertas();
-        }
-    }
-
-    void DesactivarPuertas()
-    {
         foreach (Transform hijo in transform)
         {
-            hijo.gameObject.SetActive(false);
+            hijo.gameObject.SetActive(!puertasAbiertas);
         }
     }
 
@@ -49,6 +40,11 @@ public class HideDoors : NetworkBehaviour
             audioSource.Play();
             sonidoReproducido = true;
         }
+    }
+    public void ReiniciarPuertas()
+    {
+        puertasAbiertas = false;
+        sonidoReproducido = false;
     }
 
     Player BuscarHunter()

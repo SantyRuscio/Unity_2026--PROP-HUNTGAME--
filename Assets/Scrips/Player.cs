@@ -163,7 +163,7 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            // FREEZE TOTAL
+            // freezeo completo
             _netRb.Rigidbody.linearVelocity = Vector3.zero;
             _netRb.Rigidbody.angularVelocity = Vector3.zero;
             _jumpPressed = false;
@@ -280,8 +280,37 @@ public class Player : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        MatchTimer = TickTimer.None;
-        HideTimer = TickTimer.None;
+        Player[] todosLosJugadores = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        foreach (Player p in todosLosJugadores)
+        {
+            if (p.Object.HasStateAuthority)
+            {
+                p.EjecutarReinicioLocal();
+            }
+        }
+
+        // 3. Le avisamos a las puertas que vuelvan a aparecer
+        HideDoors puertas = FindFirstObjectByType<HideDoors>();
+        if (puertas != null && puertas.Object.HasStateAuthority)
+        {
+            puertas.ReiniciarPuertas();
+        }
+    }
+
+    public void EjecutarReinicioLocal()
+    {
+        CurrentPropID = 0;
+        _isLocked = false;
+
+        if (isHunter)
+        {
+            HideTimer = TickTimer.CreateFromSeconds(Runner, _hideTime);
+            MatchTimer = TickTimer.None;
+        }
+        else
+        {
+            MatchTimer = TickTimer.None;
+        }
 
         string spawnName = isHunter ? "Spawn_Player1" : "Spawn_Player2";
         GameObject spawn = GameObject.Find(spawnName);
@@ -291,6 +320,7 @@ public class Player : NetworkBehaviour
             _netRb.Rigidbody.linearVelocity = Vector3.zero;
             _netRb.Rigidbody.angularVelocity = Vector3.zero;
 
+            _netRb.Rigidbody.position = spawn.transform.position;
             transform.position = spawn.transform.position;
             transform.rotation = spawn.transform.rotation;
         }
