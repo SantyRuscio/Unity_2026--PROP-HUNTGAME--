@@ -16,11 +16,13 @@ public class LocalInputs : NetworkBehaviour
 
     public override void Spawned()
     {
-        if (object.HasInputAuthority)
+        if (Object.HasInputAuthority)
         {
             _inputData = new NetworkInputData();
-            Instance.this;
+            Instance = this;
+            return; 
         }
+
         enabled = false;
     }
 
