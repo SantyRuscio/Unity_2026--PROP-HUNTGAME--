@@ -2,7 +2,9 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerSpawning : NetworkBehaviour, INetworkRunnerCallbacks
 {
@@ -48,7 +50,16 @@ public class PlayerSpawning : NetworkBehaviour, INetworkRunnerCallbacks
     {}
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
-    {}
+    { 
+
+        Runner.Shutdown();
+
+    }
+
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {}
@@ -79,10 +90,6 @@ public class PlayerSpawning : NetworkBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {}
-
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-    {}
-
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
     {}
 }

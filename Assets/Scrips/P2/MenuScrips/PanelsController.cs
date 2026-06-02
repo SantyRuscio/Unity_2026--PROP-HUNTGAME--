@@ -54,7 +54,7 @@ public class PanelsController : MonoBehaviour
     {
         _hostButton.interactable=false;
 
-        _runnerHandler.HostGame(_inputSessionName.text ,"GamePlay");
+        _runnerHandler.HostGame(_inputSessionName.text ,"Gameplay");
     }
 
 }
