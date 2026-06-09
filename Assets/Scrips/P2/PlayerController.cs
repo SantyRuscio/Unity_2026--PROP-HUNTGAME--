@@ -29,7 +29,9 @@ public class PlayerController : NetworkBehaviour
 
         if (inputs.Buttons.IsSet(ButtonTypes.Shot))
         {
-            _weapon.ShootGameObject();
+            // _weapon.ShootGameObject();
+            _weapon.ShootRaycast(); 
+
         }
     }
 }

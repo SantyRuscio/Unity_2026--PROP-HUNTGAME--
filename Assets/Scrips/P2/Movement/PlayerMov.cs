@@ -1,9 +1,11 @@
 using Fusion;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
 public class PlayerMov : NetworkCharacterController
 {
+    public event Action<float> OnMovement;
     public override void Move(Vector3 direction)
     {
         var deltaTime = Runner.DeltaTime;
@@ -40,5 +42,7 @@ public class PlayerMov : NetworkCharacterController
 
         Velocity = (transform.position - previousPos) * Runner.TickRate;
         Grounded = _controller.isGrounded;
+
+        OnMovement?.Invoke(Velocity.x);
     }
 }
