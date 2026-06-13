@@ -26,13 +26,12 @@ public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (_currentRunner)
         {
             Destroy(_currentRunner.gameObject);
-
-            _currentRunner = Instantiate(_runnerPrefab);
-
-            _currentRunner.AddCallbacks(this);
-
-            JoinLobbyAsync();
         }
+
+        _currentRunner = Instantiate(_runnerPrefab);
+        _currentRunner.AddCallbacks(this);
+
+        JoinLobbyAsync();
     }
 
     async void JoinLobbyAsync()
@@ -60,7 +59,7 @@ public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     //host
     public void HostGame(string sessionName, string sceneName)
     {
-        CreateGame(GameMode.Host, sessionName, SceneUtility.GetBuildIndexByScenePath($"_Game/Scenes/{sceneName}"));
+        CreateGame(GameMode.Host, sessionName, 1);
     }
 
     async void CreateGame(GameMode gameMode, string sessionName, int sceneIndex = 0)
@@ -71,17 +70,18 @@ public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = gameMode,
             SessionName = sessionName,
-            Scene = SceneRef.FromIndex(sceneIndex), 
-            PlayerCount = 2
+            Scene = SceneRef.FromIndex(sceneIndex),
+            PlayerCount = 2,
+            SceneManager = _currentRunner.gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
 
         if (result.Ok)
         {
-            Debug.Log("Connected To Lobby");
+            Debug.Log("¡Juego iniciado y escena cargada!");
         }
         else
         {
-            Debug.Log("Fail Join Lobby");
+            Debug.Log("Fallo al iniciar el juego");
         }
     }
 

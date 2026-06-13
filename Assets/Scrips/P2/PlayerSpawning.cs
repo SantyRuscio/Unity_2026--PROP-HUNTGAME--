@@ -17,16 +17,25 @@ public class PlayerSpawning : NetworkBehaviour, INetworkRunnerCallbacks
     }
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if(runner.IsServer) 
+        if (runner.IsServer)
         {
-            var designedSpawnPoint = _spawnPoints[runner.SessionInfo.PlayerCount - 1];
-            Runner.Spawn(_playerPrefab, 
-                designedSpawnPoint.position, 
-                designedSpawnPoint.rotation, 
-                player);
-        
-        }
+            if (runner.SessionInfo.PlayerCount == 2)
+            {
+                int index = 0;
 
+                foreach (var jugadorActivo in runner.ActivePlayers)
+                {
+                    var designedSpawnPoint = _spawnPoints[index];
+
+                    Runner.Spawn(_playerPrefab,
+                        designedSpawnPoint.position,
+                        designedSpawnPoint.rotation,
+                        jugadorActivo);
+
+                    index++;
+                }
+            }
+        }
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)

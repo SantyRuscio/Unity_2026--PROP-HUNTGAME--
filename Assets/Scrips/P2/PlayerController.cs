@@ -16,11 +16,11 @@ public class PlayerController : NetworkBehaviour
     }
     public override void FixedUpdateNetwork()
     {
+        if (Runner.SessionInfo.PlayerCount < 2) return;
+
         if (!GetInput(out NetworkInputData inputs)) return;
 
         _playerMov.Move(Vector3.right * inputs.xAxi);
-
-    
 
         if (inputs.Buttons.IsSet(ButtonTypes.Jump))
         {
@@ -29,9 +29,7 @@ public class PlayerController : NetworkBehaviour
 
         if (inputs.Buttons.IsSet(ButtonTypes.Shot))
         {
-            // _weapon.ShootGameObject();
             _weapon.ShootRaycast(); 
-
         }
     }
 }
