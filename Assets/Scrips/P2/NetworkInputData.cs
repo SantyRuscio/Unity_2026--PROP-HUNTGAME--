@@ -1,8 +1,11 @@
 using Fusion;
+using UnityEngine;
 
 public struct NetworkInputData : INetworkInput
 {
     public float xAxi;
+    public Vector2 moveAxis; // x e y del joystick/WASD
+    public float lookYaw;    // rotación horizontal del mouse
     public const byte MouseButton0 = 1;
 
     //public NetworkBool isShotPressed;

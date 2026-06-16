@@ -28,23 +28,26 @@ public class LocalInputs : NetworkBehaviour
 
     public void Update()
     {
-       // if (Keyboard.current.spaceKey.wasPressedThisFrame)
-       // {
-       //     _isJumpPressed = true;
-       // }
-       // if (Keyboard.current.wKey.wasPressedThisFrame)
-       // {
-       //     _isFirePressed = true;
-       // }
+        // if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        // {
+        //     _isJumpPressed = true;
+        // }
+        // if (Keyboard.current.wKey.wasPressedThisFrame)
+        // {
+        //     _isFirePressed = true;
+        // }
 
-        _isFirePressed |= Keyboard.current.wKey.wasPressedThisFrame;
+        _isFirePressed |= Mouse.current.leftButton.wasPressedThisFrame;
         _isJumpPressed |= Keyboard.current.spaceKey.wasPressedThisFrame;
 
     }
 
     public NetworkInputData GetInputData()
     {
-        _inputData.xAxi = _moveActionReference.action.ReadValue<Vector2>().x;
+        _inputData.moveAxis = _moveActionReference.action.ReadValue<Vector2>();
+
+        // rotación con mouse
+        _inputData.lookYaw = Mouse.current.delta.ReadValue().x;
 
         _inputData.Buttons.Set(ButtonTypes.Jump, _isJumpPressed);
         _isJumpPressed = false;

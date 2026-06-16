@@ -15,34 +15,33 @@ public class PlayerMov : NetworkCharacterController
         direction = direction.normalized;
 
         if (Grounded && moveVelocity.y < 0)
-        {
             moveVelocity.y = 0f;
-        }
 
         moveVelocity.y += gravity * Runner.DeltaTime;
 
-        var horizontalVel = default(Vector3);
-        horizontalVel.x = moveVelocity.x;
+        // Movimiento en X y Z (plano horizontal)
+        var horizontalVel = new Vector3(moveVelocity.x, 0, moveVelocity.z);
 
         if (direction == default)
         {
-            horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
+            horizontalVel = Vector3.Lerp(horizontalVel, Vector3.zero, braking * deltaTime);
         }
         else
         {
-            horizontalVel = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, maxSpeed);
-            // transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
-
-            transform.eulerAngles = Vector3.up * ((direction.x < 0) ? 180 : 0);
+            // Mover relativo a donde mira el player
+            Vector3 worldDir = transform.TransformDirection(direction);
+            horizontalVel = Vector3.ClampMagnitude(
+                horizontalVel + worldDir * acceleration * deltaTime, maxSpeed);
         }
 
         moveVelocity.x = horizontalVel.x;
+        moveVelocity.z = horizontalVel.z;
 
         _controller.Move(moveVelocity * deltaTime);
 
         Velocity = (transform.position - previousPos) * Runner.TickRate;
         Grounded = _controller.isGrounded;
 
-        OnMovement?.Invoke(Velocity.x);
+        OnMovement?.Invoke(new Vector2(Velocity.x, Velocity.z).magnitude);
     }
 }
