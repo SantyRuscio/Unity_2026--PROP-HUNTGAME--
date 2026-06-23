@@ -13,6 +13,7 @@ public class LocalInputs : NetworkBehaviour
     bool _isJumpPressed;
     bool _isFirePressed;
     bool _isTransformPressed;
+    bool _isFreezePressed;
 
     public override void Spawned()
     {
@@ -32,6 +33,11 @@ public class LocalInputs : NetworkBehaviour
         _isJumpPressed |= Keyboard.current.spaceKey.wasPressedThisFrame;
 
         _isTransformPressed |= Mouse.current.rightButton.wasPressedThisFrame;
+
+        if (Keyboard.current != null)
+        {
+            _isFreezePressed |= Keyboard.current.eKey.wasPressedThisFrame;
+        }
     }
 
     public NetworkInputData GetInputData()
@@ -48,6 +54,9 @@ public class LocalInputs : NetworkBehaviour
 
         _inputData.Buttons.Set(ButtonTypes.Transform, _isTransformPressed);
         _isTransformPressed = false;
+
+        _inputData.Buttons.Set(ButtonTypes.Freeze, _isFreezePressed);
+        _isFreezePressed = false;
 
         return _inputData;
     }

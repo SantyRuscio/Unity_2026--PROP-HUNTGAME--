@@ -17,5 +17,6 @@ public enum ButtonTypes
 {
     Jump=0,
     Shot =1,
-    Transform = 2
+    Transform = 2,
+    Freeze = 3
 }

@@ -13,6 +13,10 @@ public class PlayerController : NetworkBehaviour
 
     [Networked] public NetworkBool IsHunter { get; set; }
     [Networked] public int CurrentPropID { get; set; }
+
+    // Nueva variable en red para saber si el Prop está congelado en el lugar
+    [Networked] public NetworkBool IsFrozen { get; set; }
+
     private int _maxProps = 3;
 
     private void Awake()
@@ -27,12 +31,26 @@ public class PlayerController : NetworkBehaviour
         if (Runner.SessionInfo.PlayerCount < 2) return;
         if (!GetInput(out NetworkInputData inputs)) return;
 
-        transform.Rotate(Vector3.up * inputs.lookYaw * sensitivity);
-        Vector3 dir = new Vector3(inputs.moveAxis.x, 0, inputs.moveAxis.y);
-        _playerMov.Move(dir);
+        // Si está congelado, no le permitimos rotar la cámara al personaje
+        if (!IsFrozen)
+        {
+            transform.Rotate(Vector3.up * inputs.lookYaw * sensitivity);
+        }
 
-        if (inputs.Buttons.IsSet(ButtonTypes.Jump))
-            _playerMov.Jump();
+        Vector3 dir = new Vector3(inputs.moveAxis.x, 0, inputs.moveAxis.y);
+
+        // Si está congelado, mandamos un vector cero para que no se mueva en absoluto
+        if (IsFrozen)
+        {
+            _playerMov.Move(Vector3.zero);
+        }
+        else
+        {
+            _playerMov.Move(dir);
+
+            if (inputs.Buttons.IsSet(ButtonTypes.Jump))
+                _playerMov.Jump();
+        }
 
         if (IsHunter)
         {
@@ -47,6 +65,12 @@ public class PlayerController : NetworkBehaviour
             if (inputs.Buttons.IsSet(ButtonTypes.Transform))
             {
                 CycleProp();
+            }
+
+            // Si es un Prop y presiona la E, toggleamos el estado de congelación
+            if (inputs.Buttons.IsSet(ButtonTypes.Freeze))
+            {
+                IsFrozen = !IsFrozen;
             }
         }
     }
