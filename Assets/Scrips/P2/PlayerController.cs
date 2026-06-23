@@ -1,21 +1,29 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerMov))]
 [RequireComponent(typeof(PlayerWeapon))]
+[RequireComponent(typeof(AudioSource))]
 public class PlayerController : NetworkBehaviour
 {
     private PlayerMov _playerMov;
     private PlayerWeapon _weapon;
     private MovementAnimation _anim;
+    private AudioSource _audioSource;
 
     [SerializeField] private float sensitivity = 0.1f;
+    [SerializeField] private AudioClip whistleSound;
+
+    [Header("Configuración del Silbido")]
+    [SerializeField] private float whistleCooldown = 5f;
+    [SerializeField] private Image whistleUIIcon;
 
     [Networked] public NetworkBool IsHunter { get; set; }
     [Networked] public int CurrentPropID { get; set; }
-
-    // Nueva variable en red para saber si el Prop está congelado en el lugar
     [Networked] public NetworkBool IsFrozen { get; set; }
+
+    [Networked] private TickTimer WhistleCooldownTimer { get; set; }
 
     private int _maxProps = 3;
 
@@ -24,6 +32,11 @@ public class PlayerController : NetworkBehaviour
         _playerMov = GetComponent<PlayerMov>();
         _weapon = GetComponent<PlayerWeapon>();
         _anim = GetComponentInChildren<MovementAnimation>();
+        _audioSource = GetComponent<AudioSource>();
+
+        _audioSource.spatialBlend = 1f;
+        _audioSource.maxDistance = 20f;
+        _audioSource.loop = false;
     }
 
     public override void FixedUpdateNetwork()
@@ -31,7 +44,6 @@ public class PlayerController : NetworkBehaviour
         if (Runner.SessionInfo.PlayerCount < 2) return;
         if (!GetInput(out NetworkInputData inputs)) return;
 
-        // Si está congelado, no le permitimos rotar la cámara al personaje
         if (!IsFrozen)
         {
             transform.Rotate(Vector3.up * inputs.lookYaw * sensitivity);
@@ -39,7 +51,6 @@ public class PlayerController : NetworkBehaviour
 
         Vector3 dir = new Vector3(inputs.moveAxis.x, 0, inputs.moveAxis.y);
 
-        // Si está congelado, mandamos un vector cero para que no se mueva en absoluto
         if (IsFrozen)
         {
             _playerMov.Move(Vector3.zero);
@@ -67,11 +78,58 @@ public class PlayerController : NetworkBehaviour
                 CycleProp();
             }
 
-            // Si es un Prop y presiona la E, toggleamos el estado de congelación
             if (inputs.Buttons.IsSet(ButtonTypes.Freeze))
             {
                 IsFrozen = !IsFrozen;
             }
+
+            if (inputs.Buttons.IsSet(ButtonTypes.Whistle))
+            {
+                if (WhistleCooldownTimer.ExpiredOrNotRunning(Runner))
+                {
+                    WhistleCooldownTimer = TickTimer.CreateFromSeconds(Runner, whistleCooldown);
+
+                    if (Object.HasInputAuthority)
+                    {
+                        RPC_PlayWhistle();
+                    }
+                }
+            }
+        }
+    }
+
+    public override void Render()
+    {
+        // Doble validación de seguridad: Si no soy el dueño local, no toco la UI
+        if (!Object.HasInputAuthority || whistleUIIcon == null) return;
+
+        if (!IsHunter)
+        {
+            // SI SOY PROP: Me aseguro de prender el ícono si estaba apagado
+            if (!whistleUIIcon.gameObject.activeSelf)
+                whistleUIIcon.gameObject.SetActive(true);
+
+            // Control de opacidad por Cooldown
+            if (WhistleCooldownTimer.IsRunning)
+            {
+                float remainingTime = WhistleCooldownTimer.RemainingTime(Runner) ?? 0f;
+                float progress = remainingTime / whistleCooldown;
+                float alpha = Mathf.Lerp(1f, 0.3f, progress);
+
+                Color c = whistleUIIcon.color;
+                whistleUIIcon.color = new Color(c.r, c.g, c.b, alpha);
+            }
+            else
+            {
+                Color c = whistleUIIcon.color;
+                whistleUIIcon.color = new Color(c.r, c.g, c.b, 1f);
+            }
+        }
+        else
+        {
+            // SI SOY HUNTER: Apago el ícono inmediatamente para que nunca aparezca en mi pantalla
+            if (whistleUIIcon.gameObject.activeSelf)
+                whistleUIIcon.gameObject.SetActive(false);
         }
     }
 
@@ -80,5 +138,26 @@ public class PlayerController : NetworkBehaviour
         CurrentPropID++;
         if (CurrentPropID > _maxProps)
             CurrentPropID = 0;
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    private void RPC_PlayWhistle()
+    {
+        if (_audioSource != null && whistleSound != null)
+        {
+            _audioSource.PlayOneShot(whistleSound);
+        }
+    }
+
+    public override void Spawned()
+    {
+        if (Object.HasInputAuthority)
+        {
+            GameObject findIcon = GameObject.Find("Icono_Silbato");
+            if (findIcon != null)
+            {
+                whistleUIIcon = findIcon.GetComponent<Image>();
+            }
+        }
     }
 }

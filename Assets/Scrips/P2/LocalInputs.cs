@@ -14,6 +14,7 @@ public class LocalInputs : NetworkBehaviour
     bool _isFirePressed;
     bool _isTransformPressed;
     bool _isFreezePressed;
+    bool _isWhistlePressed;
 
     public override void Spawned()
     {
@@ -37,6 +38,8 @@ public class LocalInputs : NetworkBehaviour
         if (Keyboard.current != null)
         {
             _isFreezePressed |= Keyboard.current.eKey.wasPressedThisFrame;
+
+            _isWhistlePressed |= Keyboard.current.fKey.wasPressedThisFrame;
         }
     }
 
@@ -57,6 +60,9 @@ public class LocalInputs : NetworkBehaviour
 
         _inputData.Buttons.Set(ButtonTypes.Freeze, _isFreezePressed);
         _isFreezePressed = false;
+
+        _inputData.Buttons.Set(ButtonTypes.Whistle, _isWhistlePressed);
+        _isWhistlePressed = false;
 
         return _inputData;
     }
