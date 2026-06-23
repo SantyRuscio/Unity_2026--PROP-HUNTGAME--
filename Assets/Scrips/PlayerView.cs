@@ -3,27 +3,26 @@ using UnityEngine;
 
 public class PlayerView : MonoBehaviour
 {
-    [SerializeField] private NetworkMecanimAnimator _mecanim;
-    [SerializeField] private ParticleSystem _fireParticles;
-
-    [Header("Mecánica Extra")]
-    [SerializeField] private AudioSource _tauntAudioSource;
-
     [Header("Modelos Visuales")]
-    [SerializeField] private GameObject _humanMesh; 
+    [SerializeField] private GameObject _humanMesh;
     [SerializeField] private GameObject[] _propMeshes;
 
     private int _lastVisualID = 0;
-    private Player _player;
+    private PlayerController _playerController;
+
+    private void OnEnable()
+    {
+        _playerController = GetComponentInParent<PlayerController>();
+    }
 
     private void Update()
     {
-        if (_player == null) return;
+        if (_playerController == null) return;
 
-        if (_player.CurrentPropID != _lastVisualID)
+        if (_playerController.CurrentPropID != _lastVisualID)
         {
-            SwapModel(_player.CurrentPropID);
-            _lastVisualID = _player.CurrentPropID;
+            SwapModel(_playerController.CurrentPropID);
+            _lastVisualID = _playerController.CurrentPropID;
         }
     }
 
@@ -41,74 +40,6 @@ public class PlayerView : MonoBehaviour
             {
                 _propMeshes[i].SetActive(i == (id - 1));
             }
-        }
-    }
-
-    private void OnEnable()
-    {
-        _player = GetComponentInParent<Player>();
-
-        if (_player != null)
-        {
-            _player.OnMovement += HandleMovement;
-            _player.OnJump += HandleJump;
-            _player.OnGroundedChanged += HandleGrounded;
-
-            _player.OnTaunt += HandleTaunt;
-
-            _player.OnShoot += HandleShoot;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (_player != null)
-        {
-            _player.OnMovement -= HandleMovement;
-            _player.OnJump -= HandleJump;
-            _player.OnGroundedChanged -= HandleGrounded;
-
-            _player.OnTaunt -= HandleTaunt;
-
-            _player.OnShoot -= HandleShoot;
-        }
-    }
-
-    void HandleMovement(float speed)
-    {
-        _mecanim.Animator.SetFloat("speed", speed);
-    }
-
-    void HandleJump()
-    {
-        _mecanim.Animator.SetTrigger("jump");
-    }
-
-    void HandleGrounded(bool grounded)
-    {
-        _mecanim.Animator.SetBool("isGrounded", grounded);
-    }
-
-    void ShotParticles()
-    {
-        _fireParticles.Play();
-    }
-
-    void HandleTaunt()
-    {
-        if (_tauntAudioSource != null)
-        {
-            _tauntAudioSource.Play();
-        }
-    }
-
-    void HandleShoot()
-    {
-        _mecanim.Animator.SetTrigger("shoot");
-
-        if (_fireParticles != null)
-        {
-            _fireParticles.Play(); // partículas
         }
     }
 }

@@ -19,21 +19,18 @@ public class PlayerSpawning : NetworkBehaviour, INetworkRunnerCallbacks
     {
         if (runner.IsServer)
         {
-            if (runner.SessionInfo.PlayerCount == 2)
+            bool isHunter = runner.SessionInfo.PlayerCount == 1;
+
+            var designedSpawnPoint = _spawnPoints[runner.SessionInfo.PlayerCount - 1];
+
+            var playerObj = Runner.Spawn(_playerPrefab,
+                designedSpawnPoint.position,
+                designedSpawnPoint.rotation,
+                player);
+
+            if (playerObj.TryGetComponent(out PlayerController controller))
             {
-                int index = 0;
-
-                foreach (var jugadorActivo in runner.ActivePlayers)
-                {
-                    var designedSpawnPoint = _spawnPoints[index];
-
-                    Runner.Spawn(_playerPrefab,
-                        designedSpawnPoint.position,
-                        designedSpawnPoint.rotation,
-                        jugadorActivo);
-
-                    index++;
-                }
+                controller.IsHunter = isHunter;
             }
         }
     }

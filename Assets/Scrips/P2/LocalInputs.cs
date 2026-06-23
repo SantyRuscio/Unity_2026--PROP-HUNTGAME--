@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class LocalInputs : NetworkBehaviour
 {
-   public static LocalInputs Instance { get; private set; }
+    public static LocalInputs Instance { get; private set; }
 
     private NetworkInputData _inputData;
 
@@ -12,7 +12,7 @@ public class LocalInputs : NetworkBehaviour
 
     bool _isJumpPressed;
     bool _isFirePressed;
-
+    bool _isTransformPressed;
 
     public override void Spawned()
     {
@@ -20,7 +20,7 @@ public class LocalInputs : NetworkBehaviour
         {
             _inputData = new NetworkInputData();
             Instance = this;
-            return; 
+            return;
         }
 
         enabled = false;
@@ -28,25 +28,16 @@ public class LocalInputs : NetworkBehaviour
 
     public void Update()
     {
-        // if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        // {
-        //     _isJumpPressed = true;
-        // }
-        // if (Keyboard.current.wKey.wasPressedThisFrame)
-        // {
-        //     _isFirePressed = true;
-        // }
-
         _isFirePressed |= Mouse.current.leftButton.wasPressedThisFrame;
         _isJumpPressed |= Keyboard.current.spaceKey.wasPressedThisFrame;
 
+        _isTransformPressed |= Mouse.current.rightButton.wasPressedThisFrame;
     }
 
     public NetworkInputData GetInputData()
     {
         _inputData.moveAxis = _moveActionReference.action.ReadValue<Vector2>();
 
-        // rotación con mouse
         _inputData.lookYaw = Mouse.current.delta.ReadValue().x;
 
         _inputData.Buttons.Set(ButtonTypes.Jump, _isJumpPressed);
@@ -55,7 +46,9 @@ public class LocalInputs : NetworkBehaviour
         _inputData.Buttons.Set(ButtonTypes.Shot, _isFirePressed);
         _isFirePressed = false;
 
+        _inputData.Buttons.Set(ButtonTypes.Transform, _isTransformPressed);
+        _isTransformPressed = false;
+
         return _inputData;
     }
-
 }
