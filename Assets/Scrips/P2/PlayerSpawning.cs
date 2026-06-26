@@ -45,6 +45,7 @@ public class PlayerSpawning : NetworkBehaviour, INetworkRunnerCallbacks
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
         Runner.Shutdown();
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)

@@ -108,10 +108,12 @@ public class GameManager : NetworkBehaviour
                 Transform[] spawns = spawner.GetSpawnPoints();
                 var players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
 
+                int index = 0;
                 foreach (var p in players)
                 {
-                    Transform miSpawn = p.IsHunter ? spawns[0] : spawns[1];
+                    Transform miSpawn = spawns[index % spawns.Length];
                     p.ResetPlayerState(miSpawn.position, miSpawn.rotation);
+                    index++;
                 }
             }
         }
@@ -119,13 +121,25 @@ public class GameManager : NetworkBehaviour
 
     private void VolverAlMenu()
     {
-        if (Runner.IsServer) RPC_VolverAlMenuTodos();
-        else Runner.Shutdown();
+        if (Runner.IsServer)
+        {
+            RPC_VolverAlMenuTodos();
+        }
+        else
+        {
+            DesconectarYVolver();
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_VolverAlMenuTodos()
     {
+        DesconectarYVolver();
+    }
+
+    private void DesconectarYVolver()
+    {
         Runner.Shutdown();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 }
