@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float sensitivity = 0.1f;
     [SerializeField] private AudioClip whistleSound;
 
-    [Header("Configuración del Silbido")]
+    [Header("Configuraciï¿½n del Silbido")]
     [SerializeField] private float whistleCooldown = 5f;
     [SerializeField] private Image whistleUIIcon;
 
@@ -43,7 +43,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (Runner.SessionInfo.PlayerCount < 2) return;
         if (!GetInput(out NetworkInputData inputs)) return;
-
+        if (GameManager.Instance != null && GameManager.Instance.IsGameOver) return;
         if (!IsFrozen)
         {
             transform.Rotate(Vector3.up * inputs.lookYaw * sensitivity);
@@ -100,12 +100,12 @@ public class PlayerController : NetworkBehaviour
 
     public override void Render()
     {
-        // Doble validación de seguridad: Si no soy el dueño local, no toco la UI
+        // Doble validaciï¿½n de seguridad: Si no soy el dueï¿½o local, no toco la UI
         if (!Object.HasInputAuthority || whistleUIIcon == null) return;
 
         if (!IsHunter)
         {
-            // SI SOY PROP: Me aseguro de prender el ícono si estaba apagado
+            // SI SOY PROP: Me aseguro de prender el ï¿½cono si estaba apagado
             if (!whistleUIIcon.gameObject.activeSelf)
                 whistleUIIcon.gameObject.SetActive(true);
 
@@ -127,7 +127,7 @@ public class PlayerController : NetworkBehaviour
         }
         else
         {
-            // SI SOY HUNTER: Apago el ícono inmediatamente para que nunca aparezca en mi pantalla
+            // SI SOY HUNTER: Apago el ï¿½cono inmediatamente para que nunca aparezca en mi pantalla
             if (whistleUIIcon.gameObject.activeSelf)
                 whistleUIIcon.gameObject.SetActive(false);
         }
@@ -159,5 +159,34 @@ public class PlayerController : NetworkBehaviour
                 whistleUIIcon = findIcon.GetComponent<Image>();
             }
         }
+    }
+    public void ResetPlayerState(Vector3 pos, Quaternion rot)
+    {
+        if (Runner.IsServer)
+        {
+            CurrentPropID = 0;
+            IsFrozen = false;
+
+            var health = GetComponent<HealthComponent>();
+            if (health != null) health.ResetHealth();
+
+            RPC_Teleport(pos, rot);
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_Teleport(Vector3 pos, Quaternion rot)
+    {
+        var cc = GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+
+        transform.position = pos;
+        transform.rotation = rot;
+
+        if (_playerMov != null)
+        {
+            _playerMov.Teleport(pos);
+        }
+        if (cc != null) cc.enabled = true;
     }
 }

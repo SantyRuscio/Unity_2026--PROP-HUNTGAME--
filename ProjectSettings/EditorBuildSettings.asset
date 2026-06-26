@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 87ecdd0864279844890e04a17d72e483
   - enabled: 1
-    path: Assets/Scenes/Parcial2/Gameplay.unity
+    path: Assets/Scenes/Gameplay.unity
     guid: 0e250576738b1bf4d91ba581b879793c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

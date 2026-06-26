@@ -4,69 +4,96 @@ using UnityEngine;
 
 public class DoorTimer : NetworkBehaviour
 {
-    [SerializeField] private float timeToDestroy = 30f; // Tiempo en segundos
+    [Header("Configuraci√≥n de Tiempos")]
+    [SerializeField] private float timeToHide = 30f;
+    [SerializeField] private float timeToHunt = 120f;
+
+    [Header("UI y Visuales")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameObject doorVisual;
 
-    [Networked, OnChangedRender(nameof(OnTimeChanged))]
+    [Networked]
     private float CurrentTime { get; set; }
 
-    [Networked, OnChangedRender(nameof(OnDoorStateChanged))]
-    private NetworkBool IsDoorDestroyed { get; set; }
+    [Networked, OnChangedRender(nameof(OnPhaseChanged))]
+    private NetworkBool IsHuntingPhase { get; set; }
+
+    [Networked]
+    private NetworkBool _matchEnded { get; set; }
 
     public override void Spawned()
     {
         if (Runner.IsServer)
         {
-            CurrentTime = timeToDestroy;
-            IsDoorDestroyed = false;
+            CurrentTime = timeToHide;
+            IsHuntingPhase = false;
+            _matchEnded = false;
         }
     }
 
     public override void FixedUpdateNetwork()
     {
-        // Consigna: No iniciar hasta que haya al menos 2 jugadores conectados
-        if (Runner.SessionInfo.PlayerCount < 2) return;
+        if (Runner.SessionInfo.PlayerCount < 2 || _matchEnded) return;
 
-        // Solo el Host maneja el estado del tiempo
-        if (Runner.IsServer && !IsDoorDestroyed)
+        if (Runner.IsServer)
         {
             CurrentTime -= Runner.DeltaTime;
 
             if (CurrentTime <= 0)
             {
-                CurrentTime = 0;
-                IsDoorDestroyed = true; // Esto disparar· la desactivaciÛn en todos lados
+                if (!IsHuntingPhase)
+                {
+                    IsHuntingPhase = true;
+                    CurrentTime = timeToHunt;
+                }
+                else
+                {
+                    CurrentTime = 0;
+                    _matchEnded = true;
+
+                    if (GameManager.Instance != null)
+                        GameManager.Instance.TerminarJuego(false);
+                }
             }
         }
     }
 
-    private void OnTimeChanged()
+    public override void Render()
     {
         UpdateTimerUI();
-    }
-
-    private void OnDoorStateChanged()
-    {
-        HandleDoorDestruction();
     }
 
     private void UpdateTimerUI()
     {
         if (timerText != null)
         {
-            timerText.text = Mathf.CeilToInt(CurrentTime).ToString();
+            int minutes = Mathf.FloorToInt(CurrentTime / 60);
+            int seconds = Mathf.FloorToInt(CurrentTime % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
     }
 
-    private void HandleDoorDestruction()
+    public void ResetTimer()
     {
-        if (IsDoorDestroyed)
+        if (Runner.IsServer)
+        {
+            CurrentTime = timeToHide;
+            IsHuntingPhase = false;
+            _matchEnded = false;
+        }
+    }
+
+    private void OnPhaseChanged()
+    {
+        if (IsHuntingPhase)
         {
             if (doorVisual != null) doorVisual.SetActive(false);
-            if (timerText != null) timerText.gameObject.SetActive(false);
-
-            Debug.Log("°La puerta se ha abierto! °Hunters al ataque!");
+            if (timerText != null) timerText.color = Color.red;
+        }
+        else
+        {
+            if (doorVisual != null) doorVisual.SetActive(true);
+            if (timerText != null) timerText.color = Color.white;
         }
     }
 }

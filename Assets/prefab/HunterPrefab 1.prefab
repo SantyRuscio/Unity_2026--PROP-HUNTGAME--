@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.0685847, y: 1.5874366, z: -3.5026827}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6555771893922741967}
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveInputReference: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _speed: 5
+  _speed: 9
   _jumpForce: 7
   _netRb: {fileID: -6036676742253881737}
   _groundCheckDistance: 1.1
@@ -159,6 +159,8 @@ MonoBehaviour:
   _maxProps: 2
   _matchTime: 60
   _hideTime: 15
+  tauntAudio: {fileID: 0}
+  tauntCooldown: 5
 --- !u!114 &2689563535206479049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,9 +191,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 359c18b90674a7f4db18bde560747558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mecanim: {fileID: 2689563535206479049}
-  _fireParticles: {fileID: 0}
-  _tauntAudioSource: {fileID: -7246338642969464813}
   _humanMesh: {fileID: 8927857220398770068}
   _propMeshes: []
 --- !u!82 &-7246338642969464813
