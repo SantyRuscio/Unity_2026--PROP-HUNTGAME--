@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float sensitivity = 0.1f;
     [SerializeField] private AudioClip whistleSound;
 
-    [Header("Configuraci�n del Silbido")]
+    [Header("Configuración del Silbido")]
     [SerializeField] private float whistleCooldown = 5f;
     [SerializeField] private Image whistleUIIcon;
 
@@ -44,6 +44,8 @@ public class PlayerController : NetworkBehaviour
         if (Runner.SessionInfo.PlayerCount < 2) return;
         if (!GetInput(out NetworkInputData inputs)) return;
         if (GameManager.Instance != null && GameManager.Instance.IsGameOver) return;
+
+        // La rotación horizontal de la cámara se aplica siempre que el jugador no esté congelado
         if (!IsFrozen)
         {
             transform.Rotate(Vector3.up * inputs.lookYaw * sensitivity);
@@ -51,6 +53,7 @@ public class PlayerController : NetworkBehaviour
 
         Vector3 dir = new Vector3(inputs.moveAxis.x, 0, inputs.moveAxis.y);
 
+        // Control del movimiento base horizontal
         if (IsFrozen)
         {
             _playerMov.Move(Vector3.zero);
@@ -63,8 +66,12 @@ public class PlayerController : NetworkBehaviour
                 _playerMov.Jump();
         }
 
+        // ========================================================
+        // CONTROL EXCLUSIVO POR ROLES
+        // ========================================================
         if (IsHunter)
         {
+            // El cazador puede disparar
             if (inputs.Buttons.IsSet(ButtonTypes.Shot))
             {
                 _weapon.ShootRaycast();
@@ -73,39 +80,44 @@ public class PlayerController : NetworkBehaviour
         }
         else
         {
-            if (inputs.Buttons.IsSet(ButtonTypes.Transform))
+            // El objeto (Prop) puede usar sus habilidades si no está congelado en el piso
+            if (!IsFrozen)
             {
-                CycleProp();
+                if (inputs.Buttons.IsSet(ButtonTypes.Transform))
+                {
+                    CycleProp();
+                }
+
+                if (inputs.Buttons.IsSet(ButtonTypes.Whistle))
+                {
+                    if (WhistleCooldownTimer.ExpiredOrNotRunning(Runner))
+                    {
+                        WhistleCooldownTimer = TickTimer.CreateFromSeconds(Runner, whistleCooldown);
+
+                        if (Object.HasInputAuthority)
+                        {
+                            RPC_PlayWhistle();
+                        }
+                    }
+                }
             }
 
+            // Alternar estado de congelación (Funciona siempre para el Prop)
             if (inputs.Buttons.IsSet(ButtonTypes.Freeze))
             {
                 IsFrozen = !IsFrozen;
-            }
-
-            if (inputs.Buttons.IsSet(ButtonTypes.Whistle))
-            {
-                if (WhistleCooldownTimer.ExpiredOrNotRunning(Runner))
-                {
-                    WhistleCooldownTimer = TickTimer.CreateFromSeconds(Runner, whistleCooldown);
-
-                    if (Object.HasInputAuthority)
-                    {
-                        RPC_PlayWhistle();
-                    }
-                }
             }
         }
     }
 
     public override void Render()
     {
-        // Doble validaci�n de seguridad: Si no soy el due�o local, no toco la UI
+        // Doble validación de seguridad: Si no soy el dueño local, no toco la UI
         if (!Object.HasInputAuthority || whistleUIIcon == null) return;
 
         if (!IsHunter)
         {
-            // SI SOY PROP: Me aseguro de prender el �cono si estaba apagado
+            // SI SOY PROP: Me aseguro de prender el ícono si estaba apagado
             if (!whistleUIIcon.gameObject.activeSelf)
                 whistleUIIcon.gameObject.SetActive(true);
 
@@ -127,7 +139,7 @@ public class PlayerController : NetworkBehaviour
         }
         else
         {
-            // SI SOY HUNTER: Apago el �cono inmediatamente para que nunca aparezca en mi pantalla
+            // SI SOY HUNTER: Apago el ícono inmediatamente para que nunca aparezca en mi pantalla
             if (whistleUIIcon.gameObject.activeSelf)
                 whistleUIIcon.gameObject.SetActive(false);
         }
@@ -160,12 +172,13 @@ public class PlayerController : NetworkBehaviour
             }
         }
     }
+
     public void ResetPlayerState(Vector3 pos, Quaternion rot)
     {
         if (Runner.IsServer)
         {
             CurrentPropID = 0;
-            IsFrozen = false;
+            IsFrozen = false; // Descongelamos al jugador para que inicie con movilidad completa
 
             var health = GetComponent<HealthComponent>();
             if (health != null) health.ResetHealth();
