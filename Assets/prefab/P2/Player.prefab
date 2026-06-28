@@ -5015,6 +5015,9 @@ MonoBehaviour:
   _bulletPrefab:
     RawGuidValue: 627472a44cd195240a27bea90a12e549
   _spawnPoint: {fileID: 596921831747015827}
+  _capasQueBloqueanTiro:
+    serializedVersion: 2
+    m_Bits: 768
 --- !u!114 &-7366753154888676664
 MonoBehaviour:
   m_ObjectHideFlags: 0

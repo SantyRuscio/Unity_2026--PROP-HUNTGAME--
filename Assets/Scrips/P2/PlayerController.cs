@@ -117,7 +117,7 @@ public class PlayerController : NetworkBehaviour
 
         if (!IsHunter)
         {
-            // SI SOY PROP: Me aseguro de prender el ícono si estaba apagado
+            //Me aseguro de prender el ícono si estaba apagado
             if (!whistleUIIcon.gameObject.activeSelf)
                 whistleUIIcon.gameObject.SetActive(true);
 
@@ -178,7 +178,7 @@ public class PlayerController : NetworkBehaviour
         if (Runner.IsServer)
         {
             CurrentPropID = 0;
-            IsFrozen = false; // Descongelamos al jugador para que inicie con movilidad completa
+            IsFrozen = false; //Descongelamos al jugador para que inicie con movilidad completa
 
             var health = GetComponent<HealthComponent>();
             if (health != null) health.ResetHealth();

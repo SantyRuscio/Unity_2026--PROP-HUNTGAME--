@@ -175,6 +175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door
       objectReference: {fileID: 0}
+    - target: {fileID: 8892000996383808963, guid: 33d62896bd012fc44af921f276176bac, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1378,6 +1382,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8892000996383808963, guid: 33d62896bd012fc44af921f276176bac, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1913,7 +1921,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1442550601}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: DoorComplement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2698,7 +2706,7 @@ GameObject:
   - component: {fileID: 2131587249}
   - component: {fileID: 2131587248}
   - component: {fileID: 2131587247}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Puerta
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2740,6 +2748,11 @@ MonoBehaviour:
   timeToHunt: 120
   timerText: {fileID: 725104157}
   doorVisual: {fileID: 1442550600}
+  _CurrentTime: 0
+  _IsHuntingPhase:
+    _value: 0
+  _MatchEnded:
+    _value: 0
 --- !u!4 &2131587249
 Transform:
   m_ObjectHideFlags: 0
