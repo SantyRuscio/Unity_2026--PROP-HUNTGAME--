@@ -4956,6 +4956,7 @@ MonoBehaviour:
   _CurrentPropID: 0
   _IsFrozen:
     _value: 0
+  _CameraPitch: 0
 --- !u!143 &7198733539627313337
 CharacterController:
   m_ObjectHideFlags: 0
@@ -5068,7 +5069,7 @@ MonoBehaviour:
   collisionLayers:
     serializedVersion: 2
     m_Bits: 512
-  cameraRadius: 0.2
+  cameraRadius: 0.4
   minDistance: 0.5
 --- !u!114 &3016475198783388085
 MonoBehaviour:

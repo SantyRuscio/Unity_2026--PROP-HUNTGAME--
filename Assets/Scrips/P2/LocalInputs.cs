@@ -48,6 +48,7 @@ public class LocalInputs : NetworkBehaviour
         _inputData.moveAxis = _moveActionReference.action.ReadValue<Vector2>();
 
         _inputData.lookYaw = Mouse.current.delta.ReadValue().x;
+        _inputData.lookPitch = Mouse.current.delta.ReadValue().y; 
 
         _inputData.Buttons.Set(ButtonTypes.Jump, _isJumpPressed);
         _isJumpPressed = false;

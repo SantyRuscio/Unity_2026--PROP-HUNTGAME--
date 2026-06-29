@@ -3,14 +3,14 @@ using Fusion;
 
 public class PlayerCamera : NetworkBehaviour
 {
-    [Header("Configuración Base")]
+    [Header("ConfiguraciÃ³n Base")]
     [SerializeField] private Vector3 offset = new Vector3(0, 2, -4);
     [SerializeField] private float smoothSpeed = 10f;
 
-    [Header("Colisión de Cámara")]
-    [SerializeField] private LayerMask collisionLayers; // Capas que la cámara NO puede traspasar (Default, Paredes, etc.)
-    [SerializeField] private float cameraRadius = 0.2f;  // Radio del SphereCast para evitar que los bordes traspasen
-    [SerializeField] private float minDistance = 0.5f;   // Lo más cerca que se puede poner la cámara del jugador
+    [Header("ColisiÃ³n de CÃ¡mara")]
+    [SerializeField] private LayerMask collisionLayers; 
+    [SerializeField] private float cameraRadius = 0.2f; 
+    [SerializeField] private float minDistance = 0.5f;  
 
     private Camera _cam;
 
@@ -35,9 +35,14 @@ public class PlayerCamera : NetworkBehaviour
     {
         if (_cam == null) return;
 
+        float currentPitch = 0f;
+        if (TryGetComponent(out PlayerController controller))
+        {
+            currentPitch = controller.CameraPitch;
+        }
 
-        Vector3 targetPos = transform.position + transform.rotation * offset;
-
+        Quaternion rotacionTotal = transform.rotation * Quaternion.Euler(currentPitch, 0, 0);
+        Vector3 targetPos = transform.position + rotacionTotal * offset;
 
         Vector3 originPos = transform.position + Vector3.up * offset.y;
 

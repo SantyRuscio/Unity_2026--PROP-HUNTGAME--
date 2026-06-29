@@ -23,6 +23,8 @@ public class PlayerController : NetworkBehaviour
     [Networked] public int CurrentPropID { get; set; }
     [Networked] public NetworkBool IsFrozen { get; set; }
 
+    [Networked] public float CameraPitch { get; set; }
+
     [Networked] private TickTimer WhistleCooldownTimer { get; set; }
 
     private int _maxProps = 3;
@@ -45,15 +47,14 @@ public class PlayerController : NetworkBehaviour
         if (!GetInput(out NetworkInputData inputs)) return;
         if (GameManager.Instance != null && GameManager.Instance.IsGameOver) return;
 
-        // La rotación horizontal de la cámara se aplica siempre que el jugador no esté congelado
         if (!IsFrozen)
         {
             transform.Rotate(Vector3.up * inputs.lookYaw * sensitivity);
+            CameraPitch -= inputs.lookPitch * sensitivity;
+            CameraPitch = Mathf.Clamp(CameraPitch, -85f, 85f);
         }
 
         Vector3 dir = new Vector3(inputs.moveAxis.x, 0, inputs.moveAxis.y);
-
-        // Control del movimiento base horizontal
         if (IsFrozen)
         {
             _playerMov.Move(Vector3.zero);
@@ -71,7 +72,6 @@ public class PlayerController : NetworkBehaviour
         // ========================================================
         if (IsHunter)
         {
-            // El cazador puede disparar
             if (inputs.Buttons.IsSet(ButtonTypes.Shot))
             {
                 _weapon.ShootRaycast();
@@ -80,7 +80,6 @@ public class PlayerController : NetworkBehaviour
         }
         else
         {
-            // El objeto (Prop) puede usar sus habilidades si no está congelado en el piso
             if (!IsFrozen)
             {
                 if (inputs.Buttons.IsSet(ButtonTypes.Transform))
@@ -102,7 +101,6 @@ public class PlayerController : NetworkBehaviour
                 }
             }
 
-            // Alternar estado de congelación (Funciona siempre para el Prop)
             if (inputs.Buttons.IsSet(ButtonTypes.Freeze))
             {
                 IsFrozen = !IsFrozen;
@@ -112,16 +110,13 @@ public class PlayerController : NetworkBehaviour
 
     public override void Render()
     {
-        // Doble validación de seguridad: Si no soy el dueño local, no toco la UI
         if (!Object.HasInputAuthority || whistleUIIcon == null) return;
 
         if (!IsHunter)
         {
-            //Me aseguro de prender el ícono si estaba apagado
             if (!whistleUIIcon.gameObject.activeSelf)
                 whistleUIIcon.gameObject.SetActive(true);
 
-            // Control de opacidad por Cooldown
             if (WhistleCooldownTimer.IsRunning)
             {
                 float remainingTime = WhistleCooldownTimer.RemainingTime(Runner) ?? 0f;
@@ -139,7 +134,6 @@ public class PlayerController : NetworkBehaviour
         }
         else
         {
-            // SI SOY HUNTER: Apago el ícono inmediatamente para que nunca aparezca en mi pantalla
             if (whistleUIIcon.gameObject.activeSelf)
                 whistleUIIcon.gameObject.SetActive(false);
         }
@@ -178,7 +172,8 @@ public class PlayerController : NetworkBehaviour
         if (Runner.IsServer)
         {
             CurrentPropID = 0;
-            IsFrozen = false; //Descongelamos al jugador para que inicie con movilidad completa
+            IsFrozen = false;
+            CameraPitch = 0f;
 
             var health = GetComponent<HealthComponent>();
             if (health != null) health.ResetHealth();
