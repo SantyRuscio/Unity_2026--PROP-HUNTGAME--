@@ -3,7 +3,7 @@ using Fusion;
 using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
-using UnityEditor.SearchService;
+//using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
 
 public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
