@@ -87,20 +87,21 @@ public class PlayerController : NetworkBehaviour
                 {
                     CycleProp();
                 }
+            }
 
-                if (inputs.Buttons.IsSet(ButtonTypes.Whistle))
+            if (inputs.Buttons.IsSet(ButtonTypes.Whistle))
+            {
+                if (WhistleCooldownTimer.ExpiredOrNotRunning(Runner))
                 {
-                    if (WhistleCooldownTimer.ExpiredOrNotRunning(Runner))
-                    {
-                        WhistleCooldownTimer = TickTimer.CreateFromSeconds(Runner, whistleCooldown);
+                    WhistleCooldownTimer = TickTimer.CreateFromSeconds(Runner, whistleCooldown);
 
-                        if (Object.HasInputAuthority)
-                        {
-                            RPC_PlayWhistle();
-                        }
+                    if (Object.HasInputAuthority)
+                    {
+                        RPC_PlayWhistle();
                     }
                 }
             }
+
 
             if (inputs.Buttons.IsSet(ButtonTypes.Freeze))
             {

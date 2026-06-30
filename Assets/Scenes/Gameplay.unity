@@ -717,15 +717,15 @@ RectTransform:
   m_GameObject: {fileID: 287317965}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2098274505}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 311.2501, y: -147.09885}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0.89500004, y: 0.062386367}
+  m_AnchorMax: {x: 0.9562501, y: 0.19245455}
+  m_AnchoredPosition: {x: -0.2000122, y: -0.3999939}
+  m_SizeDelta: {x: 51, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &287317967
 MonoBehaviour:
@@ -1544,7 +1544,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8083234999568959353, guid: 33d62896bd012fc44af921f276176bac, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.7329986
+      value: -0.7
       objectReference: {fileID: 0}
     - target: {fileID: 8083234999568959353, guid: 33d62896bd012fc44af921f276176bac, type: 3}
       propertyPath: m_LocalPosition.y
