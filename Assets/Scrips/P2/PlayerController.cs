@@ -17,7 +17,8 @@ public class PlayerController : NetworkBehaviour
 
     [Header("Configuración del Silbido")]
     [SerializeField] private float whistleCooldown = 5f;
-    [SerializeField] private Image whistleUIIcon;
+
+    private Image whistleUIIcon;
 
     [Networked] public NetworkBool IsHunter { get; set; }
     [Networked] public int CurrentPropID { get; set; }
