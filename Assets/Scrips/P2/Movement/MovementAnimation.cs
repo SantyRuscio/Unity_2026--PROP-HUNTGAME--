@@ -22,20 +22,15 @@ public class MovementAnimation : NetworkBehaviour
     {
         var animator = _mecanim.Animator;
 
-        // Velocidad para Idle <-> Run
         animator.SetFloat("speed", velocity);
 
-        // Grounded
         animator.SetBool("isGrounded", _movement.Grounded);
 
-        // Jump (trigger, solo cuando despega)
         if (!_movement.Grounded)
             animator.SetBool("jump", true);
         else
             animator.SetBool("jump", false);
     }
-
-    // Llamar esto desde PlayerController cuando dispara
     public void TriggerShoot()
     {
         _mecanim.Animator.SetTrigger("shoot");

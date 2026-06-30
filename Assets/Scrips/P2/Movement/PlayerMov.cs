@@ -19,7 +19,6 @@ public class PlayerMov : NetworkCharacterController
 
         moveVelocity.y += gravity * Runner.DeltaTime;
 
-        // Movimiento en X y Z (plano horizontal)
         var horizontalVel = new Vector3(moveVelocity.x, 0, moveVelocity.z);
 
         if (direction == default)
@@ -28,7 +27,6 @@ public class PlayerMov : NetworkCharacterController
         }
         else
         {
-            // Mover relativo a donde mira el player
             Vector3 worldDir = transform.TransformDirection(direction);
             horizontalVel = Vector3.ClampMagnitude(
                 horizontalVel + worldDir * acceleration * deltaTime, maxSpeed);
