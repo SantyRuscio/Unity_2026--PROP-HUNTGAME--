@@ -990,10 +990,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Men\xFA"
+  m_text: MENU
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4ac758d59fd3dab4a9c4d8662208e78f, type: 2}
+  m_sharedMaterial: {fileID: -1139251363241267431, guid: 4ac758d59fd3dab4a9c4d8662208e78f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1127,10 +1127,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Reiniciar
+  m_text: RESTART
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4ac758d59fd3dab4a9c4d8662208e78f, type: 2}
+  m_sharedMaterial: {fileID: -1139251363241267431, guid: 4ac758d59fd3dab4a9c4d8662208e78f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1224,7 +1224,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &655591125
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1798,10 +1798,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RESULTADO
+  m_text: RESULT
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4ac758d59fd3dab4a9c4d8662208e78f, type: 2}
+  m_sharedMaterial: {fileID: -1139251363241267431, guid: 4ac758d59fd3dab4a9c4d8662208e78f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1832,7 +1832,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2745,10 +2745,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2285b4a3c037364a9f1b59fb731279a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _panelGameOver: {fileID: 655591124}
-  _textoResultado: {fileID: 1259834075}
-  _btnReiniciar: {fileID: 1728738660}
-  _btnMenu: {fileID: 1795222804}
+  _gameOverPanel: {fileID: 0}
+  _resultText: {fileID: 0}
+  _restartButton: {fileID: 0}
+  _menuButton: {fileID: 0}
   _IsGameOver:
     _value: 0
   _HunterWon:

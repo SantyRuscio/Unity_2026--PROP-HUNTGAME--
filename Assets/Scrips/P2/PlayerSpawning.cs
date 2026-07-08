@@ -1,6 +1,7 @@
 using Fusion;
 using Fusion.Sockets;
 using System.Collections.Generic;
+using System.Linq; 
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,21 +18,36 @@ public class PlayerSpawning : NetworkBehaviour, INetworkRunnerCallbacks
     public override void Spawned()
     {
         Runner.AddCallbacks(this);
+
+        if (Runner.IsServer)
+        {
+            int index = 0;
+            foreach (var player in Runner.ActivePlayers)
+            {
+                SpawnPlayer(player, index);
+                index++;
+            }
+        }
+    }
+
+    private void SpawnPlayer(PlayerRef player, int index)
+    {
+        bool isHunter = index == 0;
+        var spawnPoint = _spawnPoints[index % _spawnPoints.Length];
+
+        var playerObj = Runner.Spawn(_playerPrefab, spawnPoint.position, spawnPoint.rotation, player);
+
+        if (playerObj.TryGetComponent(out PlayerController controller))
+        {
+            controller.IsHunter = isHunter;
+        }
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (runner.IsServer)
+        if (runner.IsServer && runner.SessionInfo.PlayerCount > runner.ActivePlayers.Count())
         {
-            bool isHunter = runner.SessionInfo.PlayerCount == 1;
-            var designedSpawnPoint = _spawnPoints[runner.SessionInfo.PlayerCount - 1];
-
-            var playerObj = Runner.Spawn(_playerPrefab, designedSpawnPoint.position, designedSpawnPoint.rotation, player);
-
-            if (playerObj.TryGetComponent(out PlayerController controller))
-            {
-                controller.IsHunter = isHunter;
-            }
+            SpawnPlayer(player, runner.SessionInfo.PlayerCount - 1);
         }
     }
 

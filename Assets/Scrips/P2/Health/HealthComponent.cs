@@ -1,5 +1,5 @@
-using Fusion;
 using UnityEngine;
+using Fusion;
 
 public class HealthComponent : NetworkBehaviour
 {
@@ -32,10 +32,11 @@ public class HealthComponent : NetworkBehaviour
 
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.TerminarJuego(true);
+                GameManager.Instance.EndGame(true);
             }
         }
     }
+
     public void ResetHealth()
     {
         if (Runner.IsServer)

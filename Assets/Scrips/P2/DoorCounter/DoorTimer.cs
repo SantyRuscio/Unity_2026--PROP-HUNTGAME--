@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class DoorTimer : NetworkBehaviour
 {
-    [Header("Configuración de Tiempos")]
+    [Header("Time Settings")]
     [SerializeField] private int timeToHide = 15;
     [SerializeField] private int timeToHunt = 120;
 
-    [Header("UI y Visuales")]
+    [Header("UI & Visuals")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameObject doorVisual;
 
@@ -51,7 +51,7 @@ public class DoorTimer : NetworkBehaviour
                     else
                     {
                         MatchEnded = true;
-                        if (GameManager.Instance != null) GameManager.Instance.TerminarJuego(false);
+                        if (GameManager.Instance != null) GameManager.Instance.EndGame(false);
                     }
                 }
             }
@@ -82,6 +82,7 @@ public class DoorTimer : NetworkBehaviour
             RPC_UpdateVisuals(false);
         }
     }
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_UpdateVisuals(bool isHunting)
     {

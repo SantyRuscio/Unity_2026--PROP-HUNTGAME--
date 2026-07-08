@@ -7,11 +7,11 @@ public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
 
-    [Header("UI Pantallas")]
-    [SerializeField] private GameObject _panelGameOver;
-    [SerializeField] private TextMeshProUGUI _textoResultado;
-    [SerializeField] private Button _btnReiniciar;
-    [SerializeField] private Button _btnMenu;
+    [Header("UI Screens")]
+    [SerializeField] private GameObject _gameOverPanel;
+    [SerializeField] private TextMeshProUGUI _resultText;
+    [SerializeField] private Button _restartButton;
+    [SerializeField] private Button _menuButton;
 
     [Networked, OnChangedRender(nameof(OnGameOverChanged))]
     public NetworkBool IsGameOver { get; set; }
@@ -22,78 +22,77 @@ public class GameManager : NetworkBehaviour
     public override void Spawned()
     {
         Instance = this;
-        if (_panelGameOver != null) _panelGameOver.SetActive(false);
-        if (_btnMenu != null) _btnMenu.onClick.AddListener(VolverAlMenu);
+        if (_gameOverPanel != null) _gameOverPanel.SetActive(false);
+        if (_menuButton != null) _menuButton.onClick.AddListener(ReturnToMenu);
 
         if (Runner.IsServer)
         {
-            if (_btnReiniciar != null)
+            if (_restartButton != null)
             {
-                _btnReiniciar.gameObject.SetActive(true);
-                _btnReiniciar.onClick.AddListener(ReiniciarNivel);
+                _restartButton.gameObject.SetActive(true);
+                _restartButton.onClick.AddListener(RestartLevel);
             }
         }
         else
         {
-            if (_btnReiniciar != null) _btnReiniciar.gameObject.SetActive(false);
+            if (_restartButton != null) _restartButton.gameObject.SetActive(false);
         }
     }
 
-    public void TerminarJuego(bool ganoHunter)
+    public void EndGame(bool hunterWon)
     {
         if (!Runner.IsServer) return;
-
-        HunterWon = ganoHunter;
+        HunterWon = hunterWon;
         IsGameOver = true;
     }
 
     private void OnGameOverChanged()
     {
-        if (IsGameOver) MostrarPantallaFinal();
-        else OcultarPantallaFinal();
+        if (IsGameOver) ShowGameOverScreen();
+        else HideGameOverScreen();
     }
 
-    private void MostrarPantallaFinal()
+    private void ShowGameOverScreen()
     {
-        if (_panelGameOver == null || _textoResultado == null) return;
+        if (_gameOverPanel == null || _resultText == null) return;
 
-        _panelGameOver.SetActive(true);
+        _gameOverPanel.SetActive(true);
 
-        bool soyHunter = false;
+        bool amIHunter = false;
         foreach (var player in FindObjectsByType<PlayerController>(FindObjectsSortMode.None))
         {
             if (player.Object != null && player.Object.HasInputAuthority)
             {
-                soyHunter = player.IsHunter;
+                amIHunter = player.IsHunter;
                 break;
             }
         }
 
-        bool gane = (soyHunter && HunterWon) || (!soyHunter && !HunterWon);
+        bool didIWin = (amIHunter && HunterWon) || (!amIHunter && !HunterWon);
 
-        if (gane)
+        if (didIWin)
         {
-            _textoResultado.text = "¡VICTORIA!";
-            _textoResultado.color = Color.green;
+            _resultText.text = "VICTORY!";
+            _resultText.color = Color.green;
         }
         else
         {
-            _textoResultado.text = "¡DERROTA!";
-            _textoResultado.color = Color.red;
+            _resultText.text = "DEFEAT!";
+            _resultText.color = Color.red;
         }
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    private void OcultarPantallaFinal()
+    private void HideGameOverScreen()
     {
-        if (_panelGameOver != null) _panelGameOver.SetActive(false);
+        if (_gameOverPanel != null) _gameOverPanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    private void ReiniciarNivel()
+    private void RestartLevel()
     {
         if (Runner.IsServer)
         {
@@ -110,37 +109,33 @@ public class GameManager : NetworkBehaviour
 
                 if (players.Length > 0 && spawns.Length > 0)
                 {
-                    int indiceHunterAleatorio = UnityEngine.Random.Range(0, players.Length);
-
+                    int randomHunterIndex = UnityEngine.Random.Range(0, players.Length);
                     int propSpawnIndex = 1;
-
                     int index = 0;
+
                     foreach (var p in players)
                     {
-                        bool asignadoComoHunter = (index == indiceHunterAleatorio);
-                        p.IsHunter = asignadoComoHunter;
+                        p.IsHunter = (index == randomHunterIndex);
 
-                        Transform miSpawn;
-
+                        Transform mySpawn;
                         if (p.IsHunter)
                         {
-                            miSpawn = spawns[0];
+                            mySpawn = spawns[0];
                         }
                         else
                         {
                             if (spawns.Length > 1)
                             {
-                                miSpawn = spawns[propSpawnIndex % (spawns.Length - 1) + 1];
+                                mySpawn = spawns[propSpawnIndex % (spawns.Length - 1) + 1];
                                 propSpawnIndex++;
                             }
                             else
                             {
-                                miSpawn = spawns[0];
+                                mySpawn = spawns[0];
                             }
                         }
 
-                        p.ResetPlayerState(miSpawn.position, miSpawn.rotation);
-
+                        p.ResetPlayerState(mySpawn.position, mySpawn.rotation);
                         index++;
                     }
                 }
@@ -148,25 +143,25 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    private void VolverAlMenu()
+    private void ReturnToMenu()
     {
         if (Runner.IsServer)
         {
-            RPC_VolverAlMenuTodos();
+            RPC_ReturnToMenuAll();
         }
         else
         {
-            DesconectarYVolver();
+            DisconnectAndReturn();
         }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_VolverAlMenuTodos()
+    private void RPC_ReturnToMenuAll()
     {
-        DesconectarYVolver();
+        DisconnectAndReturn();
     }
 
-    private void DesconectarYVolver()
+    private void DisconnectAndReturn()
     {
         Runner.Shutdown();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
