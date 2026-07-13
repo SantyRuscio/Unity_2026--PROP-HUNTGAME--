@@ -172,12 +172,16 @@ MonoBehaviour:
   sensitivity: 0.1
   whistleSound: {fileID: 8300000, guid: 9e7448c00d4b4e44897ff0487112db87, type: 3}
   whistleCooldown: 5
+  shootCooldown: 5
+  maxAmmo: 10
   _IsHunter:
     _value: 0
   _CurrentPropID: 0
   _IsFrozen:
     _value: 0
   _CameraPitch: 0
+  _CameraYaw: 0
+  _CurrentAmmo: 0
 --- !u!143 &7198733539627313337
 CharacterController:
   m_ObjectHideFlags: 0

@@ -15,19 +15,25 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float sensitivity = 0.1f;
     [SerializeField] private AudioClip whistleSound;
 
-    [Header("Whistle Settings")]
+    [Header("Prop Settings")]
     [SerializeField] private float whistleCooldown = 5f;
-
     private Image whistleUIIcon;
+
+    [Header("Hunter Settings")]
+    [SerializeField] private float shootCooldown = 3f;
+    [SerializeField] private int maxAmmo = 10;
+    private Image gunUIIcon;
 
     [Networked] public NetworkBool IsHunter { get; set; }
     [Networked] public int CurrentPropID { get; set; }
     [Networked] public NetworkBool IsFrozen { get; set; }
 
     [Networked] public float CameraPitch { get; set; }
-    [Networked] public float CameraYaw { get; set; } 
+    [Networked] public float CameraYaw { get; set; }
 
     [Networked] private TickTimer WhistleCooldownTimer { get; set; }
+    [Networked] private TickTimer ShootCooldownTimer { get; set; }
+    [Networked] public int CurrentAmmo { get; set; }
 
     private int _maxProps = 3;
 
@@ -79,8 +85,14 @@ public class PlayerController : NetworkBehaviour
         {
             if (inputs.Buttons.IsSet(ButtonTypes.Shot))
             {
-                _weapon.ShootRaycast();
-                RPC_PlayShootAnimation();
+                if (CurrentAmmo > 0 && ShootCooldownTimer.ExpiredOrNotRunning(Runner))
+                {
+                    ShootCooldownTimer = TickTimer.CreateFromSeconds(Runner, shootCooldown);
+                    CurrentAmmo--;
+
+                    _weapon.ShootRaycast();
+                    RPC_PlayShootAnimation();
+                }
             }
         }
         else
@@ -115,32 +127,60 @@ public class PlayerController : NetworkBehaviour
 
     public override void Render()
     {
-        if (!Object.HasInputAuthority || whistleUIIcon == null) return;
+        if (!Object.HasInputAuthority) return;
 
         if (!IsHunter)
         {
-            if (!whistleUIIcon.gameObject.activeSelf)
-                whistleUIIcon.gameObject.SetActive(true);
+            if (gunUIIcon != null && gunUIIcon.gameObject.activeSelf) gunUIIcon.gameObject.SetActive(false);
 
-            if (WhistleCooldownTimer.IsRunning)
+            if (whistleUIIcon != null)
             {
-                float remainingTime = WhistleCooldownTimer.RemainingTime(Runner) ?? 0f;
-                float progress = remainingTime / whistleCooldown;
-                float alpha = Mathf.Lerp(1f, 0.3f, progress);
+                if (!whistleUIIcon.gameObject.activeSelf) whistleUIIcon.gameObject.SetActive(true);
 
-                Color c = whistleUIIcon.color;
-                whistleUIIcon.color = new Color(c.r, c.g, c.b, alpha);
-            }
-            else
-            {
-                Color c = whistleUIIcon.color;
-                whistleUIIcon.color = new Color(c.r, c.g, c.b, 1f);
+                if (WhistleCooldownTimer.IsRunning)
+                {
+                    float remainingTime = WhistleCooldownTimer.RemainingTime(Runner) ?? 0f;
+                    float progress = remainingTime / whistleCooldown;
+                    float alpha = Mathf.Lerp(1f, 0.3f, progress);
+
+                    Color c = whistleUIIcon.color;
+                    whistleUIIcon.color = new Color(c.r, c.g, c.b, alpha);
+                }
+                else
+                {
+                    Color c = whistleUIIcon.color;
+                    whistleUIIcon.color = new Color(c.r, c.g, c.b, 1f);
+                }
             }
         }
         else
         {
-            if (whistleUIIcon.gameObject.activeSelf)
-                whistleUIIcon.gameObject.SetActive(false);
+            if (whistleUIIcon != null && whistleUIIcon.gameObject.activeSelf) whistleUIIcon.gameObject.SetActive(false);
+
+            if (gunUIIcon != null)
+            {
+                if (!gunUIIcon.gameObject.activeSelf) gunUIIcon.gameObject.SetActive(true);
+
+                if (CurrentAmmo <= 0)
+                {
+                    Color c = gunUIIcon.color;
+                    gunUIIcon.color = new Color(c.r, c.g, c.b, 0.3f); 
+                }
+                else if (ShootCooldownTimer.IsRunning)
+                {
+                    float remainingTime = ShootCooldownTimer.RemainingTime(Runner) ?? 0f;
+                    float progress = remainingTime / shootCooldown;
+                    float alpha = Mathf.Lerp(1f, 0.3f, progress);
+
+                    Color c = gunUIIcon.color;
+                    gunUIIcon.color = new Color(c.r, c.g, c.b, alpha); 
+                }
+                else
+                {
+                    Color c = gunUIIcon.color;
+                    gunUIIcon.color = new Color(c.r, c.g, c.b, 1f); 
+                }
+            }
         }
     }
 
@@ -171,10 +211,15 @@ public class PlayerController : NetworkBehaviour
         if (Object.HasInputAuthority)
         {
             GameObject findIcon = GameObject.Find("Icono_Silbato");
-            if (findIcon != null)
-            {
-                whistleUIIcon = findIcon.GetComponent<Image>();
-            }
+            if (findIcon != null) whistleUIIcon = findIcon.GetComponent<Image>();
+
+            GameObject findGunIcon = GameObject.Find("Icono_Arma");
+            if (findGunIcon != null) gunUIIcon = findGunIcon.GetComponent<Image>();
+        }
+
+        if (Object.HasStateAuthority)
+        {
+            CurrentAmmo = maxAmmo;
         }
     }
 
@@ -185,7 +230,9 @@ public class PlayerController : NetworkBehaviour
             CurrentPropID = 0;
             IsFrozen = false;
             CameraPitch = 0f;
-            CameraYaw = rot.eulerAngles.y; 
+            CameraYaw = rot.eulerAngles.y;
+
+            CurrentAmmo = maxAmmo;
 
             var health = GetComponent<HealthComponent>();
             if (health != null) health.ResetHealth();
