@@ -42,8 +42,14 @@ public class GameManager : NetworkBehaviour
     public void EndGame(bool hunterWon)
     {
         if (!Runner.IsServer) return;
+
         HunterWon = hunterWon;
         IsGameOver = true;
+        var doorTimer = FindFirstObjectByType<DoorTimer>();
+        if (doorTimer != null)
+        {
+            doorTimer.MatchEnded = true;
+        }
     }
 
     private void OnGameOverChanged()
@@ -145,14 +151,8 @@ public class GameManager : NetworkBehaviour
 
     private void ReturnToMenu()
     {
-        if (Runner.IsServer)
-        {
-            RPC_ReturnToMenuAll();
-        }
-        else
-        {
-            DisconnectAndReturn();
-        }
+        if (Runner.IsServer) RPC_ReturnToMenuAll();
+        else DisconnectAndReturn();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
