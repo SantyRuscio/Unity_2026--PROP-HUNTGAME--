@@ -10,7 +10,7 @@ public class PlayerCamera : NetworkBehaviour
     [Header("Third Person Settings (Propper)")]
     [SerializeField] private float _tpDistance = 4f;
     [SerializeField] private Vector3 _tpOffset = new Vector3(0, 0.5f, 0);
-    [SerializeField] private LayerMask _collisionLayers; 
+    [SerializeField] private LayerMask _collisionLayers;
 
     private Camera _cam;
 
@@ -33,9 +33,10 @@ public class PlayerCamera : NetworkBehaviour
         if (TryGetComponent(out PlayerController controller))
         {
             float currentPitch = controller.CameraPitch;
+            float currentYaw = controller.CameraYaw; 
             bool isHunter = controller.IsHunter;
 
-            Quaternion targetRotation = transform.rotation * Quaternion.Euler(currentPitch, 0, 0);
+            Quaternion targetRotation = Quaternion.Euler(currentPitch, currentYaw, 0);
             Vector3 targetPosition;
 
             if (isHunter)
@@ -44,11 +45,8 @@ public class PlayerCamera : NetworkBehaviour
             }
             else
             {
-
                 Vector3 startPos = _cameraPivot.position + _tpOffset;
-
                 Vector3 direction = targetRotation * Vector3.back;
-
                 Vector3 desiredPos = startPos + (direction * _tpDistance);
 
                 if (Physics.SphereCast(startPos, 0.2f, direction, out RaycastHit hit, _tpDistance, _collisionLayers))
@@ -57,12 +55,11 @@ public class PlayerCamera : NetworkBehaviour
                 }
                 else
                 {
-
                     targetPosition = desiredPos;
                 }
             }
-            _cam.transform.position = Vector3.Lerp(_cam.transform.position, targetPosition, _smoothSpeed * Time.deltaTime);
 
+            _cam.transform.position = Vector3.Lerp(_cam.transform.position, targetPosition, _smoothSpeed * Time.deltaTime);
             _cam.transform.rotation = targetRotation;
         }
     }

@@ -25,6 +25,7 @@ public class PlayerController : NetworkBehaviour
     [Networked] public NetworkBool IsFrozen { get; set; }
 
     [Networked] public float CameraPitch { get; set; }
+    [Networked] public float CameraYaw { get; set; } 
 
     [Networked] private TickTimer WhistleCooldownTimer { get; set; }
 
@@ -48,11 +49,17 @@ public class PlayerController : NetworkBehaviour
         if (!GetInput(out NetworkInputData inputs)) return;
         if (GameManager.Instance != null && GameManager.Instance.IsGameOver) return;
 
+        CameraPitch -= inputs.lookPitch * sensitivity;
+        CameraPitch = Mathf.Clamp(CameraPitch, -85f, 85f);
+
         if (!IsFrozen)
         {
             transform.Rotate(Vector3.up * inputs.lookYaw * sensitivity);
-            CameraPitch -= inputs.lookPitch * sensitivity;
-            CameraPitch = Mathf.Clamp(CameraPitch, -85f, 85f);
+            CameraYaw = transform.eulerAngles.y;
+        }
+        else
+        {
+            CameraYaw += inputs.lookYaw * sensitivity;
         }
 
         Vector3 dir = new Vector3(inputs.moveAxis.x, 0, inputs.moveAxis.y);
@@ -73,7 +80,6 @@ public class PlayerController : NetworkBehaviour
             if (inputs.Buttons.IsSet(ButtonTypes.Shot))
             {
                 _weapon.ShootRaycast();
-
                 RPC_PlayShootAnimation();
             }
         }
@@ -179,6 +185,7 @@ public class PlayerController : NetworkBehaviour
             CurrentPropID = 0;
             IsFrozen = false;
             CameraPitch = 0f;
+            CameraYaw = rot.eulerAngles.y; 
 
             var health = GetComponent<HealthComponent>();
             if (health != null) health.ResetHealth();
