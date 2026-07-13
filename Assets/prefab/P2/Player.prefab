@@ -82,6 +82,7 @@ GameObject:
   - component: {fileID: 8302770147318680869}
   - component: {fileID: 3016475198783388085}
   - component: {fileID: 6555480094249856332}
+  - component: {fileID: 8900857209620287646}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -135,6 +136,7 @@ MonoBehaviour:
   - {fileID: -7366753154888676664}
   - {fileID: 2717396710564081951}
   - {fileID: 8302770147318680869}
+  - {fileID: 8900857209620287646}
   - {fileID: 4172387002482747345}
   - {fileID: 2688761223813587954}
   ForceRemoteRenderTimeframe: 0
@@ -401,6 +403,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8900857209620287646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8364460309279176007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 7154282448437203950}
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 000000002b1a167c7940695520e23b685928a8ce1606b3a7445ccc8ee6010bc00dc2833d
+  TriggerHashes: 000000001606b3a7befc4470
+  TotalWords: 3
 --- !u!1 &9035832403739372046
 GameObject:
   m_ObjectHideFlags: 0
