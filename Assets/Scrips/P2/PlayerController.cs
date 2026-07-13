@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float sensitivity = 0.1f;
     [SerializeField] private AudioClip whistleSound;
 
-    [Header("Configuración del Silbido")]
+    [Header("Whistle Settings")]
     [SerializeField] private float whistleCooldown = 5f;
 
     private Image whistleUIIcon;
@@ -68,15 +68,13 @@ public class PlayerController : NetworkBehaviour
                 _playerMov.Jump();
         }
 
-        // ========================================================
-        // CONTROL EXCLUSIVO POR ROLES
-        // ========================================================
         if (IsHunter)
         {
             if (inputs.Buttons.IsSet(ButtonTypes.Shot))
             {
                 _weapon.ShootRaycast();
-                if (_anim != null) _anim.TriggerShoot();
+
+                RPC_PlayShootAnimation();
             }
         }
         else
@@ -101,7 +99,6 @@ public class PlayerController : NetworkBehaviour
                     }
                 }
             }
-
 
             if (inputs.Buttons.IsSet(ButtonTypes.Freeze))
             {
@@ -155,6 +152,12 @@ public class PlayerController : NetworkBehaviour
         {
             _audioSource.PlayOneShot(whistleSound);
         }
+    }
+
+    [Rpc(RpcSources.InputAuthority | RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayShootAnimation()
+    {
+        if (_anim != null) _anim.TriggerShoot();
     }
 
     public override void Spawned()

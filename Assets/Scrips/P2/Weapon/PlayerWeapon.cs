@@ -9,8 +9,9 @@ public class PlayerWeapon : NetworkBehaviour
 
     public event Action OnShot;
 
-    [Header("Configuración de Colisión de Tiro")]
-    [SerializeField] private LayerMask _capasQueBloqueanTiro;
+    [Header("Shoot Collision Settings")]
+    [SerializeField] private LayerMask _blockingLayers;
+
     public void ShootGameObject()
     {
         if (!HasStateAuthority) return;
@@ -37,20 +38,20 @@ public class PlayerWeapon : NetworkBehaviour
 
         Debug.DrawRay(origin, direction * maxDistance, Color.green, 0.5f);
 
-        float distanciaAObstaculo = maxDistance;
-        if (Physics.Raycast(origin, direction, out RaycastHit hitEscenario, maxDistance, _capasQueBloqueanTiro))
+        float distanceToObstacle = maxDistance;
+        if (Physics.Raycast(origin, direction, out RaycastHit environmentHit, maxDistance, _blockingLayers))
         {
-            if (hitEscenario.collider.GetComponentInParent<Hitbox>() == null)
+            if (environmentHit.collider.GetComponentInParent<Hitbox>() == null)
             {
-                distanciaAObstaculo = hitEscenario.distance;
-                Debug.Log($"[Escenario Detectado] Hay una pared a {distanciaAObstaculo} metros.");
+                distanceToObstacle = environmentHit.distance;
+                Debug.Log($"[Environment Detected] Wall hit at {distanceToObstacle} meters.");
             }
         }
 
         var raycastBool = Runner.LagCompensation.Raycast(
             origin: origin,
             direction: direction,
-            length: distanciaAObstaculo, 
+            length: distanceToObstacle,
             player: Object.InputAuthority,
             hit: out var HitInfo
         );
@@ -62,9 +63,9 @@ public class PlayerWeapon : NetworkBehaviour
         if (HitInfo.Hitbox != null)
         {
             if (HitInfo.Hitbox.Root.Object != null && HitInfo.Hitbox.Root.Object == Object)
-                return; 
+                return;
 
-            Debug.Log($"¡Impacto confirmado en jugador!: {HitInfo.Hitbox.Root.name}");
+            Debug.Log($"Hit confirmed on player: {HitInfo.Hitbox.Root.name}");
 
             if (HitInfo.Hitbox.Root.TryGetComponent(out HealthComponent health))
             {
