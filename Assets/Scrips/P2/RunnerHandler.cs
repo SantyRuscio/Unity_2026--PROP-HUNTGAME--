@@ -43,10 +43,8 @@ public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = gameMode,
             SessionName = sessionName,
-
             Scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex),
             PlayerCount = 2,
-
             SceneManager = _currentRunner.gameObject.GetComponent<NetworkSceneManagerDefault>() ?? _currentRunner.gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
 
@@ -59,15 +57,15 @@ public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    public void SetPlayerReady()
+    public void TogglePlayerReady()
     {
         if (_currentRunner == null) return;
 
-        _isLocalReady = true;
+        _isLocalReady = !_isLocalReady;
 
         if (_currentRunner.IsServer)
         {
-            byte[] data = new byte[] { 2 };
+            byte[] data = new byte[] { 2, (byte)(_isLocalReady ? 1 : 0) };
             foreach (var player in _currentRunner.ActivePlayers)
             {
                 if (player != _currentRunner.LocalPlayer)
@@ -78,7 +76,7 @@ public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
         }
         else
         {
-            byte[] data = new byte[] { 1 };
+            byte[] data = new byte[] { 1, (byte)(_isLocalReady ? 1 : 0) };
             _currentRunner.SendReliableDataToPlayer(PlayerRef.None, default, data);
             OnReadyStateChanged?.Invoke(_isRemoteReady, _isLocalReady);
         }
@@ -96,6 +94,7 @@ public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) { OnPlayerCountChanged?.Invoke(runner.SessionInfo.PlayerCount); }
+
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         OnPlayerCountChanged?.Invoke(runner.SessionInfo.PlayerCount);
@@ -105,18 +104,21 @@ public class RunnerHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
     {
-        if (data.Count == 0) return;
-        byte message = data.Array[data.Offset];
+        if (data.Count < 2) return;
 
-        if (runner.IsServer && message == 1)
+        byte role = data.Array[data.Offset];
+        byte readyState = data.Array[data.Offset + 1];
+        bool isReady = (readyState == 1);
+
+        if (runner.IsServer && role == 1)
         {
-            _isRemoteReady = true;
+            _isRemoteReady = isReady;
             OnReadyStateChanged?.Invoke(_isLocalReady, _isRemoteReady);
             CheckGameStart();
         }
-        else if (!runner.IsServer && message == 2)
+        else if (!runner.IsServer && role == 2)
         {
-            _isRemoteReady = true;
+            _isRemoteReady = isReady;
             OnReadyStateChanged?.Invoke(_isRemoteReady, _isLocalReady);
         }
     }

@@ -18,7 +18,6 @@ public class PanelsController : MonoBehaviour
     [SerializeField] private TMP_Text _lobbyStatusText;
     [SerializeField] private Button _lobbyReadyButton;
 
-    // 🔥 LOS NUEVOS CONTENEDORES Y TEXTOS
     [SerializeField] private GameObject _p1Container;
     [SerializeField] private TMP_Text _p1ReadyText;
     [SerializeField] private GameObject _p2Container;
@@ -61,16 +60,14 @@ public class PanelsController : MonoBehaviour
         if (_backFromBrowserButton != null) _backFromBrowserButton.onClick.AddListener(() => { _sessionBrowserPanel.SetActive(false); _initialPanel.SetActive(true); _joinLobbyButton.interactable = true; });
         if (_backFromHostButton != null) _backFromHostButton.onClick.AddListener(() => { _hostPanel.SetActive(false); _sessionBrowserPanel.SetActive(true); });
 
-        // Eventos del Lobby Visual
         _runnerHandler.OnPlayerCountChanged += UpdateLobbyUI;
-        _runnerHandler.OnReadyStateChanged += UpdateReadyVisuals; // Conectamos los textos
+        _runnerHandler.OnReadyStateChanged += UpdateReadyVisuals;
 
         if (_lobbyReadyButton != null)
         {
             _lobbyReadyButton.onClick.AddListener(() =>
             {
-                _lobbyReadyButton.interactable = false;
-                _runnerHandler.SetPlayerReady();
+                _runnerHandler.TogglePlayerReady();
             });
         }
     }
@@ -81,12 +78,11 @@ public class PanelsController : MonoBehaviour
         _hostPanel.SetActive(false);
         _menuLobbyPanel.SetActive(true);
 
-        if (_lobbyStatusText != null && _lobbyReadyButton.interactable)
+        if (_lobbyStatusText != null)
         {
             _lobbyStatusText.text = $"Players Connected: {playerCount}/2";
         }
 
-        // Si el segundo jugador no está, apagamos su imagen y ponemos su texto gris
         if (_p1Container != null) _p1Container.SetActive(true);
         if (_p2Container != null) _p2Container.SetActive(playerCount >= 2);
 
