@@ -2042,7 +2042,8 @@ PrefabInstance:
       value: building_house
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5892558394609215783, guid: 772225924e3319a49bf8ccee3b8ecc46, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 432298227257899326, guid: 772225924e3319a49bf8ccee3b8ecc46, type: 3}
       insertIndex: -1
